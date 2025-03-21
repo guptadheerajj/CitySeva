@@ -1,0 +1,18 @@
+body {
+	min-height: 100dvh;
+}
+
+main {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	text-align: center;
+}
+
+.hero {
+	background-color: cyan;
+
+}
+
+form {
+	background-color: #ccc;
+}
