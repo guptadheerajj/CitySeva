@@ -1,0 +1,141 @@
+/*
+  Josh's Custom CSS Reset
+  https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Stick+No+Bills:wght@200..800&display=swap");
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+}
+
+body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	overflow-wrap: break-word;
+}
+
+p {
+	text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	text-wrap: balance;
+}
+
+#root,
+#__next {
+	isolation: isolate;
+}
+
+:root {
+	--green-dark: #38a687;
+	--green-light: #38b593;
+	--btn-green: #4caf4f;
+	--btn-dark-green: #237d31;
+	--black-dark: #4d4d4d;
+	--black-light: #717171;
+	--black-bg: #263238;
+	--nav-bg-clr: #f3fbfe;
+}
+
+/* nav */
+body {
+	min-height: 100vh;
+	min-height: 100dvh;
+	font-family: "Inter", sans-serif;
+}
+
+header {
+	background-color: var(--nav-bg-clr);
+	padding: 1rem clamp(1rem, 6.7941vw + -1.0297rem, 5rem);
+	font-size: 1.2rem;
+}
+
+nav,
+.logo,
+.nav-right,
+.nav-middle {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo {
+	align-items: flex-end;
+	gap: 10px;
+}
+
+.logo > h1 {
+	font-family: "Stick No Bills", sans-serif;
+	color: var(--green-dark);
+	color: rebeccapurple;
+	font-weight: 800;
+	line-height: 1;
+	font-size: 2.1rem;
+}
+
+.tab {
+	background-color: var(--nav-bg-clr);
+	border: none;
+	color: var(--black-light);
+}
+
+.tab.active-tab {
+	color: var(--black-dark);
+}
+
+.tab:hover {
+	text-decoration: solid var(--black-dark) underline 4px;
+}
+
+.nav-right,
+.nav-middle {
+	gap: 16px;
+}
+
+.btn {
+	background-color: var(--btn-green);
+	color: white;
+	border: none;
+	font-size: 0.8em;
+	padding: 0.4em 2em;
+	border-radius: 4px;
+}
+
+.btn:hover {
+	background-color: var(--btn-dark-green);
+}
