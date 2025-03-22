@@ -1,3 +1,8 @@
-import './style.css'
+import "./style.css";
+import { home } from "./home.js";
 
-console.log("Running Script");
+const container = document.querySelector("#content");
+container.innerHTML = "";
+container.appendChild(home.content);
+
+console.log(home.content);
