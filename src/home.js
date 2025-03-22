@@ -32,7 +32,6 @@ const home = (function () {
 		</div>
 	</div>`;
 
-	console.log(content);
 	return {
 		content,
 	};
