@@ -1,5 +1,8 @@
 import "./style.css";
 import { home } from "./home.js";
+import { about } from "./about.js";
+import { features } from "./features.js";
+import { contact } from "./contact.js";
 
 const container = document.querySelector("#content");
 const tabs = document.querySelectorAll(".tab");
@@ -36,3 +39,21 @@ if (document.readyState === "loading") {
 } else {
 	displayHome();
 }
+
+// about
+tabListObj.about.addEventListener("click", () => {
+	container.innerHTML = "";
+	container.appendChild(about.content);
+});
+homeTab.addEventListener("click", () => {
+	container.innerHTML = "";
+	container.appendChild(home.content);
+});
+tabListObj.features.addEventListener("click", () => {
+	container.innerHTML = "";
+	container.appendChild(features.content);
+});
+tabListObj.contact.addEventListener("click", () => {
+	container.innerHTML = "";
+	container.appendChild(contact.content);
+});
