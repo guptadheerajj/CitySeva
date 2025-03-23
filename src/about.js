@@ -1,4 +1,4 @@
-export const about = (function () {
+export const aboutTab = (function () {
 	const content = document.createElement("div");
 	content.innerHTML = `
 		<div class="about-us">About US page Design Nahi mila</div>

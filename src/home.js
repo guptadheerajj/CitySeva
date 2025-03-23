@@ -2,7 +2,7 @@ import camera from "./assets/camera.svg";
 import automation from "./assets/automation.svg";
 import alert from "./assets/alert.svg";
 
-const home = (function () {
+export const homeTab = (function () {
 	const content = document.createElement("div");
 	content.innerHTML = `
 	<div class="home">
@@ -36,4 +36,3 @@ const home = (function () {
 		content,
 	};
 })();
-export { home };
