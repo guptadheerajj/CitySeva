@@ -212,6 +212,10 @@ nav,
 	min-height: 510px;
 }
 
+.formTab.login {
+	grid-template-columns: 2fr 1fr;
+}
+
 .form-message {
 	display: flex;
 	flex-flow: column nowrap;
@@ -222,6 +226,10 @@ nav,
 	background-color: var(--green-light);
 	color: white;
 	padding: 0 clamp(1rem, 2.775vw + 0.003rem, 2.813rem);
+}
+
+.login .form-message {
+	border-radius: 0 10px 10px 0;
 }
 
 .form-message > p {
