@@ -17,7 +17,6 @@ const tabContentMap = {
 
 const container = document.querySelector("#content");
 const tabs = document.querySelectorAll(".tab");
-const buttons = document.querySelectorAll(".btn");
 
 const tabListObj = {};
 tabs.forEach((tab) => {
@@ -25,10 +24,15 @@ tabs.forEach((tab) => {
 });
 
 function toggleActiveTabClass(target) {
+	const targetType = target.dataset.type;
 	for (const tab in tabListObj) {
 		tabListObj[tab].classList.remove("active-tab");
 	}
-	target.classList.add("active-tab");
+
+	// if a tab is clicked then only add active-tab class
+	if (targetType === "tab") {
+		target.classList.add("active-tab");
+	}
 }
 
 function appendContent(target) {
@@ -36,14 +40,6 @@ function appendContent(target) {
 	const tabName = target.dataset.name;
 	container.appendChild(tabContentMap[tabName]);
 }
-
-buttons.forEach((node) => {
-	node.addEventListener("click", () => {
-		const nodeName = node.dataset.name;
-		container.innerHTML = "";
-		container.appendChild(tabContentMap[nodeName]);
-	});
-});
 
 for (const tab in tabListObj) {
 	tabListObj[tab].addEventListener("click", (event) => {
