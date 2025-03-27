@@ -66,8 +66,9 @@ export const register = (function () {
 			console.log("User registered:", user);
 
 			// Redirect to the Home page
-			const homeTab = document.querySelector('[data-name="homeTab"]');
-			homeTab.click(); // Simulate a click to navigate to the Home tab
+			form.reset();
+			const homeTab = document.querySelector('[data-name="login"]');
+			homeTab.click(); // Simulate a click to navigate to the login tab
 		} catch (error) {
 			errorElement.textContent = error.message;
 			console.error("Registration error:", error.code, error.message);
