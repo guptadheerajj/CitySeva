@@ -51,10 +51,18 @@ export const login = (function () {
 				password
 			);
 			const user = userCredential.user;
-			console.log("User logged in:", user);
+			
+			// Log user details
+			console.log("Login successful - User Details:", {
+				email: user.email,
+				uid: user.uid,
+				displayName: user.displayName,
+				emailVerified: user.emailVerified
+			});
 
-			const homeTab = document.querySelector('[data-name="homeTab"]');
-			homeTab.click();
+			// Navigate to dashboard using History API
+			window.history.pushState({}, '', '/dashboard');
+			window.dispatchEvent(new PopStateEvent('popstate'));
 		} catch (error) {
 			errorElement.textContent = error.message;
 			console.error("Login error:", error.code, error.message);
