@@ -1,8 +1,8 @@
 // login.js
-import googleSignIn from "./assets/signin_google_neutral.png";
-import emailIcon from "./assets/email.svg";
-import passwordIcon from "./assets/password.svg";
-import { auth } from "./firebase.js";
+import googleSignIn from "../../assets/signin_google_neutral.png";
+import emailIcon from "../../assets/email.svg";
+import passwordIcon from "../../assets/password.svg";
+import { auth } from "../../firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 export const login = (function () {
@@ -36,7 +36,6 @@ export const login = (function () {
     </div>
   `;
 
-	// Add event listener for form submission
 	const form = content.querySelector("#login-form");
 	form.addEventListener("submit", async (e) => {
 		e.preventDefault();
@@ -54,7 +53,6 @@ export const login = (function () {
 			const user = userCredential.user;
 			console.log("User logged in:", user);
 
-			// Redirect to the Home page
 			const homeTab = document.querySelector('[data-name="homeTab"]');
 			homeTab.click();
 		} catch (error) {

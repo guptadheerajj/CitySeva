@@ -1,9 +1,9 @@
 // register.js
-import googleSignUp from "./assets/sign_up_google_neutral.png";
-import userIcon from "./assets/user.svg";
-import emailIcon from "./assets/email.svg";
-import passwordIcon from "./assets/password.svg";
-import { auth } from "./firebase.js"; // Import the auth object
+import googleSignUp from "../../assets/sign_up_google_neutral.png";
+import userIcon from "../../assets/user.svg";
+import emailIcon from "../../assets/email.svg";
+import passwordIcon from "../../assets/password.svg";
+import { auth } from "../../firebase.js"; // Import the auth object
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 export const register = (function () {
@@ -52,7 +52,6 @@ export const register = (function () {
 		const errorElement = content.querySelector("#register-error");
 
 		try {
-			// Register the user with Firebase Authentication
 			const userCredential = await createUserWithEmailAndPassword(
 				auth,
 				email,
@@ -60,15 +59,13 @@ export const register = (function () {
 			);
 			const user = userCredential.user;
 
-			// Update the user's display name
 			await updateProfile(user, { displayName: name });
 
 			console.log("User registered:", user);
 
-			// Redirect to the Home page
 			form.reset();
 			const homeTab = document.querySelector('[data-name="login"]');
-			homeTab.click(); // Simulate a click to navigate to the login tab
+			homeTab.click();
 		} catch (error) {
 			errorElement.textContent = error.message;
 			console.error("Registration error:", error.code, error.message);

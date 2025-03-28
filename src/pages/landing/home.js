@@ -1,6 +1,6 @@
-import camera from "./assets/camera.svg";
-import automation from "./assets/automation.svg";
-import alert from "./assets/alert.svg";
+import camera from "../../assets/camera.svg";
+import automation from "../../assets/automation.svg";
+import alert from "../../assets/alert.svg";
 
 export const homeTab = (function () {
 	const content = document.createElement("div");
