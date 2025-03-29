@@ -7,9 +7,23 @@ export const dashboard = (function () {
     const content = document.createElement("div");
     content.classList.add("dashboard");
 
-    // Keep track of current tab
+    // Keep track of current tab and theme
     let currentTab = 'home';
-    
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+
+    // Initialize theme
+    function initializeTheme() {
+        document.body.classList.toggle('light-theme', currentTheme === 'light');
+        content.classList.toggle('light-theme', currentTheme === 'light');
+    }
+
+    function toggleTheme() {
+        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.body.classList.toggle('light-theme');
+        content.classList.toggle('light-theme');
+        localStorage.setItem('theme', currentTheme);
+    }
+
     function renderUploadModal() {
         return `
             <div class="modal-overlay" id="upload-modal">
@@ -82,6 +96,10 @@ export const dashboard = (function () {
                     </div>
                 </div>
                 <div class="header-buttons">
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon moon"></i>
+                        <i class="fas fa-sun sun"></i>
+                    </button>
                     <button class="btn btn-upload" id="upload-btn">
                         <i class="fas fa-plus"></i>
                         Report Issue
@@ -271,6 +289,13 @@ export const dashboard = (function () {
             </div>
             ${renderUploadModal()}
         `;
+
+        // Initialize theme
+        initializeTheme();
+
+        // Theme toggle event listener
+        const themeToggle = content.querySelector("#theme-toggle");
+        themeToggle.addEventListener("click", toggleTheme);
 
         // Add event listeners for navigation
         const navLinks = content.querySelectorAll('.nav-link');

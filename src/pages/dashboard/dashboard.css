@@ -1,13 +1,152 @@
 /* Base colors and variables */
 :root {
-    --bg-primary: #000000;
-    --bg-secondary: #15181c;
-    --bg-third: #1d1f23;
-    --text-primary: #e7e9ea;
-    --text-secondary: #71767b;
+    /* Dark theme */
+    --dark-bg-primary: #000000;
+    --dark-bg-secondary: #15181c;
+    --dark-bg-third: #1d1f23;
+    --dark-text-primary: #e7e9ea;
+    --dark-text-secondary: #71767b;
+    --dark-border-color: #2f3336;
+    --dark-hover-color: #181818;
+
+    /* Light theme */
+    --light-bg-primary: #ffffff;
+    --light-bg-secondary: #f7f9f9;
+    --light-bg-third: #eff3f4;
+    --light-text-primary: #0f1419;
+    --light-text-secondary: #536471;
+    --light-border-color: #ebeef0;
+    --light-hover-color: #f7f7f7;
+
+    /* Shared colors */
     --accent-color: #1d9bf0;
-    --border-color: #2f3336;
-    --hover-color: #181818;
+    
+    /* Default theme (dark) */
+    --bg-primary: var(--dark-bg-primary);
+    --bg-secondary: var(--dark-bg-secondary);
+    --bg-third: var(--dark-bg-third);
+    --text-primary: var(--dark-text-primary);
+    --text-secondary: var(--dark-text-secondary);
+    --border-color: var(--dark-border-color);
+    --hover-color: var(--dark-hover-color);
+}
+
+/* Light theme class */
+.light-theme {
+    --bg-primary: var(--light-bg-primary);
+    --bg-secondary: var(--light-bg-secondary);
+    --bg-third: var(--light-bg-third);
+    --text-primary: var(--light-text-primary);
+    --text-secondary: var(--light-text-secondary);
+    --border-color: var(--light-border-color);
+    --hover-color: var(--light-hover-color);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    border-radius: 12px;
+    background-color: var(--bg-third);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    transition: all 0.3s ease;
+    margin-right: 8px;
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    transition: transform 0.3s ease;
+    left: 3px;
+    top: 2px;
+}
+
+.light-theme .theme-toggle::before {
+    transform: translateX(24px);
+}
+
+.theme-toggle i {
+    font-size: 12px;
+    color: var(--text-primary);
+    z-index: 1;
+    width: 50%;
+    text-align: center;
+    transition: opacity 0.3s ease;
+}
+
+.theme-toggle .sun {
+    opacity: 0;
+    margin-left: auto;
+    margin-right: 4px;
+}
+
+.theme-toggle .moon {
+    opacity: 1;
+    margin-left: 4px;
+    margin-right: auto;
+}
+
+.light-theme .theme-toggle .sun {
+    opacity: 1;
+}
+
+.light-theme .theme-toggle .moon {
+    opacity: 0;
+}
+
+/* Status tag colors for light theme */
+.light-theme .status-tag.open {
+    background: #e8f5e9;
+    color: #1a7f37;
+}
+
+.light-theme .status-tag.in-progress {
+    background: #fff3e0;
+    color: #bc6c25;
+}
+
+.light-theme .priority-high {
+    background: #ffebe9;
+    color: #cf222e;
+}
+
+.light-theme .priority-medium {
+    background: #fff8c5;
+    color: #9a6700;
+}
+
+.light-theme .priority-low {
+    background: #dafbe1;
+    color: #1a7f37;
+}
+
+/* Adjust modal overlay for light theme */
+.light-theme .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Adjust button hover states for light theme */
+.light-theme .btn-upload:hover {
+    background-color: #1884d3;
+}
+
+.light-theme .btn-logout {
+    background-color: var(--bg-third);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.light-theme .btn-logout:hover {
+    background-color: var(--hover-color);
 }
 
 .dashboard {
@@ -150,7 +289,15 @@
 
 .header-buttons {
     display: flex;
+    align-items: center;
     gap: 12px;
+}
+
+.header-buttons .btn {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
 }
 
 .btn {
