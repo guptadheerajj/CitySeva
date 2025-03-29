@@ -76,7 +76,7 @@ body {
 	font-family: "Inter", sans-serif;
 }
 
-header {
+.landing-header {
 	background-color: var(--nav-bg-clr);
 	padding: 1rem clamp(1rem, 6.7941vw + -1.0297rem, 5rem);
 	font-size: 1.2rem;

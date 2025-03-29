@@ -43,12 +43,16 @@ function toggleActiveTabClass(target) {
 function renderContent(content, isDashboard = false) {
 	const container = document.querySelector("#content");
 	const navbar = document.querySelector("#navbar");
+	const header = document.querySelector("header");
 
 	if (container) {
 		container.innerHTML = "";
 
 		if (navbar) {
 			navbar.style.display = isDashboard ? "none" : "flex";
+		}
+		if (header) {
+			header.style.display = isDashboard ? "none" : "block";
 		}
 
 		container.appendChild(content);
