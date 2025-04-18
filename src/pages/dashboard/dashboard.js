@@ -42,6 +42,7 @@ export const dashboard = (function () {
                 <input type="file" id="issue-image" accept="image/*" style="display: none;">
               </div>
             </div>
+            <div class="detection-result" id="detection-result"></div>
           </div>
           <div class="modal-footer">
             <button class="btn btn-autofill">Detect Issue With AI</button>
@@ -290,18 +291,22 @@ export const dashboard = (function () {
     const closeBtn = content.querySelector(".close-modal");
     const imageUploadContainer = content.querySelector("#image-upload");
     const imageInput = content.querySelector("#issue-image");
+    const detectionResult = content.querySelector("#detection-result");
 
     uploadBtn.addEventListener("click", () => {
       modal.classList.add("active");
+      detectionResult.innerHTML = ""; // Clear previous detection result
     });
 
     closeBtn.addEventListener("click", () => {
       modal.classList.remove("active");
+      detectionResult.innerHTML = "";
     });
 
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         modal.classList.remove("active");
+        detectionResult.innerHTML = "";
       }
     });
 
@@ -351,7 +356,7 @@ export const dashboard = (function () {
         }
         try {
           const formData = new FormData();
-          formData.append("userId", user.uid); // Append userId first
+          formData.append("userId", user.uid);
           formData.append("image", file);
           console.log("Sending FormData:", { file: file.name, userId: user.uid });
 
@@ -360,24 +365,43 @@ export const dashboard = (function () {
             console.log(`FormData entry: ${key}=${value instanceof File ? value.name : value}`);
           }
 
-          const response = await fetch("http://localhost:3000/upload", {
+          // Upload image
+          detectionResult.innerHTML = "<p>Detecting issue...</p>";
+          const uploadResponse = await fetch("http://localhost:3000/upload", {
             method: "POST",
             body: formData,
           });
 
-          console.log("Response status:", response.status);
-          const result = await response.json();
-          console.log("Response body:", result);
+          console.log("Upload response status:", uploadResponse.status);
+          const uploadResult = await uploadResponse.json();
+          console.log("Upload response body:", uploadResult);
 
-          if (!response.ok) {
-            throw new Error(result.error || "Failed to upload image");
+          if (!uploadResponse.ok) {
+            throw new Error(uploadResult.error || "Failed to upload image");
           }
 
-          console.log("Image uploaded successfully:", result);
-          alert("Image saved successfully! AI detection coming soon!");
+          console.log("Image uploaded successfully:", uploadResult);
+
+          // Detect issue
+          const detectResponse = await fetch("http://localhost:3000/detect", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ file_path: uploadResult.file_path }),
+          });
+
+          console.log("Detect response status:", detectResponse.status);
+          const detectResult = await detectResponse.json();
+          console.log("Detect response body:", detectResult);
+
+          if (!detectResponse.ok) {
+            throw new Error(detectResult.error || "Failed to detect issue");
+          }
+
+          // Display detection result in modal
+          detectionResult.innerHTML = `<p style="color: green;">Issue detected: ${detectResult.issue}</p>`;
         } catch (error) {
-          console.error("Upload error:", error.message);
-          alert(`Failed to save image: ${error.message}`);
+          console.error("Error:", error.message);
+          detectionResult.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
         }
       }, 500)
     );
@@ -385,6 +409,7 @@ export const dashboard = (function () {
     submitBtn.addEventListener("click", () => {
       console.log("Submit functionality coming soon!");
       modal.classList.remove("active");
+      detectionResult.innerHTML = "";
     });
 
     const logoutBtn = content.querySelector("#logout-btn");
