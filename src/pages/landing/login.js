@@ -4,6 +4,7 @@ import emailIcon from "../../assets/email.svg";
 import passwordIcon from "../../assets/password.svg";
 import { auth } from "../../firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithGoogle } from "../../auth.js";
 
 export const login = (function () {
 	const content = document.createElement("div");
@@ -12,7 +13,7 @@ export const login = (function () {
       <div class="form-container">
         <form id="login-form" action="post">
           <h1>Sign in to CitySeva</h1>
-          <a href="#"><img src="${googleSignIn}" alt="google-sign-up"></a>
+          <a href="#" id="google-signin"><img src="${googleSignIn}" alt="google-sign-up"></a>
           <p>or use your email account:</p>
           <hr>
           <div class="inputs">
@@ -36,6 +37,19 @@ export const login = (function () {
     </div>
   `;
 
+	// Add Google Sign-in handler
+	const googleSignInButton = content.querySelector("#google-signin");
+	googleSignInButton.addEventListener("click", async (e) => {
+		e.preventDefault();
+		const errorElement = content.querySelector("#login-error");
+		try {
+			await signInWithGoogle();
+			window.location.href = "/#/dashboard";
+		} catch (error) {
+			errorElement.textContent = error.message;
+		}
+	});
+
 	const form = content.querySelector("#login-form");
 	form.addEventListener("submit", async (e) => {
 		e.preventDefault();
@@ -50,22 +64,9 @@ export const login = (function () {
 				email,
 				password
 			);
-			const user = userCredential.user;
-			
-			// Log user details
-			console.log("Login successful - User Details:", {
-				email: user.email,
-				uid: user.uid,
-				displayName: user.displayName,
-				emailVerified: user.emailVerified
-			});
-
-			// Navigate to dashboard using History API
-			window.history.pushState({}, '', '/dashboard');
-			window.dispatchEvent(new PopStateEvent('popstate'));
+			window.location.href = "/#/dashboard";
 		} catch (error) {
 			errorElement.textContent = error.message;
-			console.error("Login error:", error.code, error.message);
 		}
 	});
 

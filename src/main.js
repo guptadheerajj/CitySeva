@@ -79,22 +79,15 @@ function setupTabListeners() {
 }
 
 function handleRoute() {
-	const path = window.location.pathname;
-
+	const path = window.location.hash.slice(1) || "/";
+	
 	if (path === "/dashboard") {
+		// Check if user is authenticated for dashboard access
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
-				console.log("Dashboard - User Details:", {
-					email: user.email,
-					uid: user.uid,
-					displayName: user.displayName,
-					emailVerified: user.emailVerified,
-					lastSignInTime: user.metadata.lastSignInTime,
-				});
-				renderContent(routes[path], true);
+				renderContent(dashboard.content, true);
 			} else {
-				window.history.pushState({}, "", "/login");
-				renderContent(routes["/login"], false);
+				window.location.href = "/#/login";
 			}
 		});
 	} else {
@@ -111,16 +104,15 @@ function handleRoute() {
 // Listen for route changes
 window.addEventListener("popstate", handleRoute);
 
+// Listen for auth state changes
+onAuthStateChanged(auth, (user) => {
+	if (user && window.location.hash === "#/login") {
+		window.location.href = "/#/dashboard";
+	}
+});
+
 // Initial setup
 document.addEventListener("DOMContentLoaded", () => {
 	setupTabListeners();
 	handleRoute();
-
-	// Set initial active tab if not on dashboard
-	if (window.location.pathname !== "/dashboard") {
-		const homeTab = document.querySelector('[data-name="homeTab"]');
-		if (homeTab) {
-			toggleActiveTabClass(homeTab);
-		}
-	}
 });

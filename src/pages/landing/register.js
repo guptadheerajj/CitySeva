@@ -5,6 +5,7 @@ import emailIcon from "../../assets/email.svg";
 import passwordIcon from "../../assets/password.svg";
 import { auth } from "../../firebase.js"; // Import the auth object
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { signInWithGoogle } from "../../auth.js";
 
 export const register = (function () {
 	const content = document.createElement("div");
@@ -17,7 +18,7 @@ export const register = (function () {
       <div class="form-container">
         <form id="register-form" action="post">
           <h1>Create Account</h1>
-          <a href="#"><img src="${googleSignUp}" alt="google-sign-up"></a>
+          <a href="#" id="google-signup"><img src="${googleSignUp}" alt="google-sign-up"></a>
           <p>or use your email for registration:</p>
           <hr>
           <div class="inputs">
@@ -40,6 +41,19 @@ export const register = (function () {
       </div>
     </div>
   `;
+
+	// Add Google Sign-up handler
+	const googleSignUpButton = content.querySelector("#google-signup");
+	googleSignUpButton.addEventListener("click", async (e) => {
+		e.preventDefault();
+		const errorElement = content.querySelector("#register-error");
+		try {
+			await signInWithGoogle();
+			window.location.href = "/#/dashboard";
+		} catch (error) {
+			errorElement.textContent = error.message;
+		}
+	});
 
 	// Add event listener for form submission
 	const form = content.querySelector("#register-form");
