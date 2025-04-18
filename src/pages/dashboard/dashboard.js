@@ -43,6 +43,16 @@ export const dashboard = (function () {
               </div>
             </div>
             <div class="detection-result" id="detection-result"></div>
+            <div class="comment-section" id="comment-section" style="display: none;">
+              <div class="location-input">
+                <label for="issue-location">Location <span style="color: red;">*</span></label>
+                <input type="text" id="issue-location" placeholder="Enter location here..." required />
+              </div>
+              <div class="description-input">
+                <label for="issue-description">Add Description (Optional)</label>
+                <textarea id="issue-description" placeholder="Enter description here..." rows="3"></textarea>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button class="btn btn-autofill">Detect Issue With AI</button>
@@ -68,71 +78,6 @@ export const dashboard = (function () {
           <div class="nav-link ${currentTab === "profile" ? "active" : ""}" data-tab="profile">
             <i class="fas fa-user"></i>
             <span>Profile</span>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderHeader(user) {
-    return `
-      <div class="dashboard-header">
-        <div class="user-info">
-          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}" alt="avatar">
-          <div>
-            <p>Welcome back,</p>
-            <p>${user.displayName || user.email.split("@")[0]}</p>
-          </div>
-        </div>
-        <div class="header-buttons">
-          <button class="theme-toggle" id="theme-toggle">
-            <i class="fas fa-moon moon"></i>
-            <i class="fas fa-sun sun"></i>
-          </button>
-          <button class="btn btn-upload" id="upload-btn">
-            <i class="fas fa-plus"></i>
-            Report Issue
-          </button>
-          <button class="btn btn-logout" id="logout-btn">
-            <i class="fas fa-sign-out-alt"></i>
-            Logout
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderIssueCard(issue) {
-    const date = new Date(issue.date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-
-    return `
-      <div class="issue-card">
-        <div class="issue-card-image-container">
-          <img src="${issue.image}" alt="${issue.title}" class="issue-card-image">
-        </div>
-        <div class="issue-card-content-wrapper">
-          <div>
-            <div class="issue-card-header">
-              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${issue.userId}" alt="User avatar">
-              <div class="issue-card-header-info">
-                <p class="username">@${issue.username}</p>
-                <p class="date">${date}</p>
-              </div>
-            </div>
-          </div>
-          <div class="issue-card-status">
-            <span class="status-tag open">
-              <i class="fas fa-exclamation-circle"></i>
-              Open
-            </span>
-            <span class="engagement-count">
-              <i class="fas fa-users"></i>
-              ${Math.floor(Math.random() * 50) + 10} citizens following
-            </span>
           </div>
         </div>
       </div>
@@ -201,60 +146,78 @@ export const dashboard = (function () {
     `;
   }
 
+  function renderHeader(user) {
+    return `
+      <div class="dashboard-header">
+        <div class="user-info">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}" alt="avatar">
+          <div>
+            <p>Welcome back,</p>
+            <p>${user.displayName || user.email.split("@")[0]}</p>
+          </div>
+        </div>
+        <div class="header-buttons">
+          <button class="theme-toggle" id="theme-toggle">
+            <i class="fas fa-moon moon"></i>
+            <i class="fas fa-sun sun"></i>
+          </button>
+          <button class="btn btn-upload" id="upload-btn">
+            <i class="fas fa-plus"></i>
+            Report Issue
+          </button>
+          <button class="btn btn-logout" id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderIssueCard(issue) {
+    // Manually parse dd/mm/yyyy format
+    const [day, month, year] = issue.date.split('/');
+    const date = `${month}/${day}/${year}`; // Convert to MM/DD/YYYY for display
+
+    return `
+      <div class="issue-card">
+        <div class="issue-card-image-container">
+          <img src="${issue.image}" alt="${issue.issue}" class="issue-card-image">
+        </div>
+        <div class="issue-card-content-wrapper">
+          <div>
+            <div class="issue-card-header">
+              <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${issue.userId}" alt="User avatar">
+              <div class="issue-card-header-info">
+                <p class="username">@${issue.username}</p>
+                <p class="date">${date}</p>
+              </div>
+            </div>
+          </div>
+          <div class="issue-card-status">
+            <h3>${issue.issue}</h3>
+            <p>${issue.location}</p>
+            <p>${issue.description || ""}</p>
+            <span class="status-tag ${issue.status.toLowerCase()}">
+              <i class="fas fa-exclamation-circle"></i>
+              ${issue.status}
+            </span>
+            <span class="engagement-count">
+              <i class="fas fa-users"></i>
+              ${issue.engagement} citizens following
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   function renderMainContent() {
-    const allIssues = [
-      {
-        title: "Broken Street Light on Main Street",
-        description:
-          "The street light near the intersection of Main St. and Oak Ave has been flickering for the past week, creating safety concerns for pedestrians and drivers at night.",
-        location: "Main Street & Oak Avenue",
-        username: "concerned_citizen",
-        userId: "user123",
-        date: "2024-03-15",
-        image: streetLight,
-      },
-      {
-        title: "Pothole Damage Risk",
-        description:
-          "Large pothole developing on Cedar Road, approximately 100 meters from the community center. Several vehicles have already been damaged.",
-        location: "Cedar Road",
-        username: "roadwatch",
-        userId: "user456",
-        date: "2024-03-14",
-        image: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=500&q=80",
-      },
-      {
-        title: "Park Cleanup Needed",
-        description:
-          "Significant amount of litter accumulated in Central Park playground area. This poses a risk to children and affects the beauty of our community space.",
-        location: "Central Park",
-        username: "parkfriend",
-        userId: "user789",
-        date: "2024-03-13",
-        image: garbage,
-      },
-    ];
-
-    const userIssues = [
-      {
-        title: "Park Cleanup Needed",
-        description:
-          "Significant amount of litter accumulated in Central Park playground area. This poses a risk to children and affects the beauty of our community space.",
-        location: "Central Park",
-        username: "parkfriend",
-        userId: "user789",
-        date: "2024-03-13",
-        image: garbage,
-      },
-    ];
-
-    const issues = currentTab === "home" ? allIssues : userIssues;
-
     return `
       <div class="content-grid">
         <div class="issues-section">
           <h2>${currentTab === "home" ? "Recent Issues" : "Your Issues"}</h2>
-          ${issues.map((issue) => renderIssueCard(issue)).join("")}
+          <div id="issues-container"></div>
         </div>
         <div class="right-sidebar">
           ${renderRightSidebar()}
@@ -283,6 +246,7 @@ export const dashboard = (function () {
       link.addEventListener("click", () => {
         currentTab = link.dataset.tab;
         render(user);
+        fetchIssues();
       });
     });
 
@@ -292,21 +256,32 @@ export const dashboard = (function () {
     const imageUploadContainer = content.querySelector("#image-upload");
     const imageInput = content.querySelector("#issue-image");
     const detectionResult = content.querySelector("#detection-result");
+    const commentSection = content.querySelector("#comment-section");
+    const locationInput = content.querySelector("#issue-location");
+    const descriptionInput = content.querySelector("#issue-description");
+    const issuesContainer = content.querySelector("#issues-container");
 
     uploadBtn.addEventListener("click", () => {
       modal.classList.add("active");
-      detectionResult.innerHTML = ""; // Clear previous detection result
+      detectionResult.innerHTML = "";
+      commentSection.style.display = "none";
     });
 
     closeBtn.addEventListener("click", () => {
       modal.classList.remove("active");
       detectionResult.innerHTML = "";
+      commentSection.style.display = "none";
+      locationInput.value = "";
+      descriptionInput.value = "";
     });
 
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         modal.classList.remove("active");
         detectionResult.innerHTML = "";
+        commentSection.style.display = "none";
+        locationInput.value = "";
+        descriptionInput.value = "";
       }
     });
 
@@ -332,13 +307,24 @@ export const dashboard = (function () {
     const autofillBtn = content.querySelector(".btn-autofill");
     const submitBtn = content.querySelector(".btn-submit");
 
-    // Debounce function to prevent multiple rapid clicks
     function debounce(func, wait) {
       let timeout;
       return function (...args) {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), wait);
       };
+    }
+
+    let uploadedImagePath = ""; // Store the uploaded image path
+
+    async function fetchIssues() {
+      try {
+        const response = await fetch("http://localhost:3000/issues");
+        const issues = await response.json();
+        issuesContainer.innerHTML = issues.map(issue => renderIssueCard(issue)).join("");
+      } catch (error) {
+        console.error("Error fetching issues:", error);
+      }
     }
 
     autofillBtn.addEventListener(
@@ -360,13 +346,12 @@ export const dashboard = (function () {
           formData.append("image", file);
           console.log("Sending FormData:", { file: file.name, userId: user.uid });
 
-          // Log FormData entries
           for (let [key, value] of formData.entries()) {
             console.log(`FormData entry: ${key}=${value instanceof File ? value.name : value}`);
           }
 
-          // Upload image
           detectionResult.innerHTML = "<p>Detecting issue...</p>";
+          commentSection.style.display = "none";
           const uploadResponse = await fetch("http://localhost:3000/upload", {
             method: "POST",
             body: formData,
@@ -381,8 +366,8 @@ export const dashboard = (function () {
           }
 
           console.log("Image uploaded successfully:", uploadResult);
+          uploadedImagePath = uploadResult.file_path; // Store the actual image path
 
-          // Detect issue
           const detectResponse = await fetch("http://localhost:3000/detect", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -397,19 +382,60 @@ export const dashboard = (function () {
             throw new Error(detectResult.error || "Failed to detect issue");
           }
 
-          // Display detection result in modal
           detectionResult.innerHTML = `<p style="color: green;">Issue detected: ${detectResult.issue}</p>`;
+          commentSection.style.display = "block";
         } catch (error) {
           console.error("Error:", error.message);
           detectionResult.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+          commentSection.style.display = "none";
         }
       }, 500)
     );
 
     submitBtn.addEventListener("click", () => {
-      console.log("Submit functionality coming soon!");
-      modal.classList.remove("active");
-      detectionResult.innerHTML = "";
+      const location = locationInput.value.trim();
+      const description = descriptionInput.value.trim();
+      if (!location) {
+        alert("Location is required!");
+        return;
+      }
+      console.log("Submit clicked - Location:", location);
+      console.log("Submit clicked - Issue Description:", description);
+
+      const detectionText = detectionResult.textContent.match(/Issue detected: (.+)/);
+      if (!detectionText) {
+        alert("Please detect an issue first!");
+        return;
+      }
+      const issue = detectionText[1];
+
+      fetch("http://localhost:3000/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.uid,
+          issue: issue,
+          location: location,
+          description: description,
+          imagePath: uploadedImagePath // Pass the actual image path
+        })
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log("Submit response:", result);
+        if (result.message) {
+          modal.classList.remove("active");
+          detectionResult.innerHTML = "";
+          commentSection.style.display = "none";
+          locationInput.value = "";
+          descriptionInput.value = "";
+          fetchIssues(); // Refresh issues after submission
+        }
+      })
+      .catch(error => {
+        console.error("Error submitting issue:", error);
+        alert("Failed to submit issue!");
+      });
     });
 
     const logoutBtn = content.querySelector("#logout-btn");
@@ -422,6 +448,9 @@ export const dashboard = (function () {
         console.error("Error signing out:", error);
       }
     });
+
+    // Fetch issues on initial render
+    fetchIssues();
   }
 
   onAuthStateChanged(auth, (user) => {

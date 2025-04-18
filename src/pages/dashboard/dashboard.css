@@ -31,6 +31,64 @@
     --hover-color: var(--dark-hover-color);
 }
 
+/* Existing styles remain unchanged; add the following */
+.detection-result {
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .comment-section {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .location-input,
+  .description-input {
+    margin-bottom: 15px;
+  }
+  
+  .location-input label,
+  .description-input label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ccc;
+    font-size: 14px;
+  }
+  
+  .location-input input {
+    width: 90%;
+    max-width: 400px;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: #fff;
+  }
+  
+  .location-input input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  .description-input textarea {
+    width: 90%;
+    max-width: 400px;
+    padding: 8px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: #fff;
+    resize: vertical;
+  }
+  
+  .description-input textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
 /* Light theme class */
 .light-theme {
     --bg-primary: var(--light-bg-primary);
