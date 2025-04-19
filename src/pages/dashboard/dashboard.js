@@ -2,6 +2,10 @@ import { auth } from "../../firebase.js";
 import { onAuthStateChanged } from "firebase/auth";
 import "./dashboard.css";
 import logo from "../../assets/logo.png";
+import beforeUpvoteIcon from "../../assets/before-upvote.png";
+import afterUpvoteIcon from "../../assets/after-upvote.png";
+import beforeDownvoteIcon from "../../assets/before-downvote.png";
+import afterDownvoteIcon from "../../assets/after-downvote.png";
 import streetLight from "../../assets/streetlight.png";
 import garbage from "../../assets/garbage.png";
 
@@ -175,12 +179,13 @@ export const dashboard = (function () {
   }
 
   function renderIssueCard(issue) {
-    // Manually parse dd/mm/yyyy format
     const [day, month, year] = issue.date.split('/');
-    const date = `${month}/${day}/${year}`; // Convert to MM/DD/YYYY for display
+    const date = `${month}/${day}/${year}`; // Convert to MM/DD/YYYY
+    const issueId = issue._id || "unknown"; // Fallback to prevent undefined
+    const userVote = issue.votes.find(v => v.userId === auth.currentUser?.uid)?.voteType;
 
     return `
-      <div class="issue-card">
+      <div class="issue-card" data-id="${issueId}">
         <div class="issue-card-image-container">
           <img src="${issue.image}" alt="${issue.issue}" class="issue-card-image">
         </div>
@@ -202,10 +207,16 @@ export const dashboard = (function () {
               <i class="fas fa-exclamation-circle"></i>
               ${issue.status}
             </span>
-            <span class="engagement-count">
-              <i class="fas fa-users"></i>
-              ${issue.engagement} citizens following
-            </span>
+            <div class="vote-section">
+              <button class="vote-btn upvote" data-type="up">
+                <img src="${userVote === 'up' ? afterUpvoteIcon : beforeUpvoteIcon}" alt="Upvote" class="vote-icon">
+                <span>${issue.upvotes || 0}</span>
+              </button>
+              <button class="vote-btn downvote" data-type="down">
+                <img src="${userVote === 'down' ? afterDownvoteIcon : beforeDownvoteIcon}" alt="Downvote" class="vote-icon">
+                <span>${issue.downvotes || 0}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -315,13 +326,28 @@ export const dashboard = (function () {
       };
     }
 
-    let uploadedImagePath = ""; // Store the uploaded image path
+    let uploadedImagePath = "";
 
     async function fetchIssues() {
       try {
         const response = await fetch("http://localhost:3000/issues");
         const issues = await response.json();
+        issues.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
         issuesContainer.innerHTML = issues.map(issue => renderIssueCard(issue)).join("");
+        
+        const voteButtons = content.querySelectorAll(".vote-btn");
+        voteButtons.forEach(button => {
+          button.addEventListener("click", async () => {
+            const issueId = button.closest(".issue-card").dataset.id;
+            const voteType = button.dataset.type;
+            if (!issueId || issueId === "unknown") {
+              console.error("Invalid issueId:", issueId);
+              return;
+            }
+            await updateVote(issueId, voteType, user.uid);
+            fetchIssues(); // Refresh issues after voting
+          });
+        });
       } catch (error) {
         console.error("Error fetching issues:", error);
       }
@@ -366,7 +392,7 @@ export const dashboard = (function () {
           }
 
           console.log("Image uploaded successfully:", uploadResult);
-          uploadedImagePath = uploadResult.file_path; // Store the actual image path
+          uploadedImagePath = uploadResult.file_path;
 
           const detectResponse = await fetch("http://localhost:3000/detect", {
             method: "POST",
@@ -417,7 +443,9 @@ export const dashboard = (function () {
           issue: issue,
           location: location,
           description: description,
-          imagePath: uploadedImagePath // Pass the actual image path
+          imagePath: uploadedImagePath,
+          upvotes: 0,
+          downvotes: 0
         })
       })
       .then(response => response.json())
@@ -438,6 +466,24 @@ export const dashboard = (function () {
       });
     });
 
+    async function updateVote(issueId, voteType, userId) {
+      try {
+        console.log("Sending vote:", { issueId, voteType, userId });
+        const response = await fetch("http://localhost:3000/vote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ issueId, voteType, userId })
+        });
+        const result = await response.json();
+        console.log("Vote update response:", result);
+        if (!response.ok) {
+          throw new Error(result.error || "Vote update failed");
+        }
+      } catch (error) {
+        console.error("Error updating vote:", error);
+      }
+    }
+
     const logoutBtn = content.querySelector("#logout-btn");
     logoutBtn.addEventListener("click", async () => {
       try {
@@ -449,7 +495,6 @@ export const dashboard = (function () {
       }
     });
 
-    // Fetch issues on initial render
     fetchIssues();
   }
 

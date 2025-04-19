@@ -88,6 +88,33 @@
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
+  .vote-section {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .vote-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .vote-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+  
+  .upvote .vote-icon {
+    filter: hue-rotate(120deg); /* Green tint for upvote */
+  }
+  
+  .downvote .vote-icon {
+    filter: hue-rotate(0deg); /* Red tint for downvote */
+  }
   
 /* Light theme class */
 .light-theme {

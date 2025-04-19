@@ -7,6 +7,7 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import json
+import uuid
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:8080", "http://127.0.0.1:5500"]}})
@@ -51,7 +52,6 @@ def detect_civic_issue(image_path, model_path=MODEL_PATH):
         return f"Error loading model: {str(e)}"
 
     try:
-        # Open image and convert to RGB to remove alpha channel
         image = Image.open(image_path).convert("RGB")
         image = image.resize((224, 224))
         image = np.array(image) / 255.0
@@ -150,16 +150,18 @@ def submit_issue():
     location = request.json["location"]
     description = request.json.get("description", "")  # Optional
     image_path = request.json["imagePath"]
+    upvotes = request.json.get("upvotes", 0)
+    downvotes = request.json.get("downvotes", 0)
 
     if not location.strip():
         print("Error: Location is required")
         return jsonify({"error": "Location is required"}), 400
 
-    # Prepare issue data with full URL for image
     relative_path = os.path.relpath(image_path, UPLOAD_FOLDER)
     full_image_url = f"{BASE_URL}/Uploads/{relative_path.replace(os.sep, '/')}"
 
     issue_data = {
+        "_id": str(uuid.uuid4()),  # Unique ID for each issue
         "userId": user_id,
         "username": user_id.split("@")[0] if "@" in user_id else user_id[:2].upper(),
         "date": time.strftime("%d/%m/%Y"),
@@ -168,10 +170,11 @@ def submit_issue():
         "description": description,
         "image": full_image_url,
         "status": "Open",
-        "engagement": 6  # Initial engagement (as per example)
+        "upvotes": upvotes,
+        "downvotes": downvotes,
+        "votes": []  # List to track user votes (userId: voteType)
     }
 
-    # Load existing issues or create new file
     issues_file = os.path.join(ISSUES_FOLDER, "issues.json")
     if os.path.exists(issues_file):
         with open(issues_file, "r") as f:
@@ -179,15 +182,73 @@ def submit_issue():
     else:
         issues = []
 
-    # Append new issue
     issues.append(issue_data)
 
-    # Save to JSON file
     with open(issues_file, "w") as f:
         json.dump(issues, f, indent=4)
 
     print("Issue submitted:", issue_data)
     return jsonify({"message": "Issue submitted successfully"}), 200
+
+@app.route("/vote", methods=["POST"])
+def update_vote():
+    print("Request headers:", dict(request.headers))
+
+    if not request.json or "issueId" not in request.json or "voteType" not in request.json or "userId" not in request.json:
+        print("Error: Missing issueId, voteType, or userId")
+        return jsonify({"error": "issueId, voteType, and userId are required"}), 400
+
+    issue_id = request.json["issueId"]
+    vote_type = request.json["voteType"]
+    user_id = request.json["userId"]
+
+    issues_file = os.path.join(ISSUES_FOLDER, "issues.json")
+    if not os.path.exists(issues_file):
+        print("Error: Issues file not found")
+        return jsonify({"error": "Issues file not found"}), 400
+
+    try:
+        with open(issues_file, "r") as f:
+            issues = json.load(f)
+
+        print(f"Looking for issue with _id: {issue_id}, type: {type(issue_id)}")
+        for issue in issues:
+            print(f"Checking issue _id: {issue['_id']}, type: {type(issue['_id'])}")
+            if str(issue["_id"]) == str(issue_id):  # Ensure string comparison
+                print(f"Match found for issue: {issue}")
+                user_vote = next((v for v in issue["votes"] if v["userId"] == user_id), None)
+                if user_vote:
+                    if user_vote["voteType"] == vote_type:
+                        return jsonify({"message": "You have already voted this way"}), 200
+                    else:
+                        if user_vote["voteType"] == "up":
+                            issue["upvotes"] -= 1
+                        elif user_vote["voteType"] == "down":
+                            issue["downvotes"] -= 1
+                        if vote_type == "up":
+                            issue["upvotes"] += 1
+                        elif vote_type == "down":
+                            issue["downvotes"] += 1
+                        user_vote["voteType"] = vote_type
+                else:
+                    if vote_type == "up":
+                        issue["upvotes"] += 1
+                    elif vote_type == "down":
+                        issue["downvotes"] += 1
+                    issue["votes"].append({"userId": user_id, "voteType": vote_type})
+                break
+        else:
+            return jsonify({"error": "Issue not found"}), 404
+
+        with open(issues_file, "w") as f:
+            json.dump(issues, f, indent=4)
+
+        print("Vote updated:", {issue_id: {"upvotes": issue["upvotes"], "downvotes": issue["downvotes"]}})
+        return jsonify({"message": "Vote updated successfully"}), 200
+
+    except Exception as e:
+        print(f"Server error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/issues", methods=["GET"])
 def get_issues():
@@ -200,7 +261,7 @@ def get_issues():
 
 @app.errorhandler(Exception)
 def handle_error(error):
-    print("Server error:", str(error))
+    print(f"Server error with traceback: {str(error)}")  # Enhanced logging
     return jsonify({"error": str(error)}), 500
 
 if __name__ == "__main__":
