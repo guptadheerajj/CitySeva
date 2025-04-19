@@ -8,6 +8,8 @@ import numpy as np
 from PIL import Image
 import json
 import uuid
+from datetime import datetime
+import threading
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:8080", "http://127.0.0.1:5500"]}})
@@ -15,14 +17,16 @@ CORS(app, resources={r"/*": {"origins": ["http://localhost:8080", "http://127.0.
 # Configuration
 UPLOAD_FOLDER = os.path.abspath("Uploads")  # Use absolute path
 ISSUES_FOLDER = os.path.abspath("issues")
+TRENDS_FOLDER = os.path.abspath("trends")
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 MODEL_PATH = "image_classifier_model_resaved.h5"
 BASE_URL = "http://localhost:3000"  # Backend URL
 
-# Ensure upload and issues folders exist
+# Ensure upload, issues, and trends folders exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(ISSUES_FOLDER, exist_ok=True)
+os.makedirs(TRENDS_FOLDER, exist_ok=True)
 
 # Serve static files from Uploads directory, handling nested paths
 @app.route("/Uploads/<path:filename>")
@@ -187,6 +191,9 @@ def submit_issue():
     with open(issues_file, "w") as f:
         json.dump(issues, f, indent=4)
 
+    # Update trending issues
+    update_trending_issues()
+
     print("Issue submitted:", issue_data)
     return jsonify({"message": "Issue submitted successfully"}), 200
 
@@ -243,21 +250,96 @@ def update_vote():
         with open(issues_file, "w") as f:
             json.dump(issues, f, indent=4)
 
+        # Update trending issues after vote
+        update_trending_issues()
+
         print("Vote updated:", {issue_id: {"upvotes": issue["upvotes"], "downvotes": issue["downvotes"]}})
         return jsonify({"message": "Vote updated successfully"}), 200
 
     except Exception as e:
-        print(f"Server error: {str(e)}")
+        print(f"Server error with traceback: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @app.route("/issues", methods=["GET"])
 def get_issues():
     issues_file = os.path.join(ISSUES_FOLDER, "issues.json")
+    trending_file = os.path.join(TRENDS_FOLDER, "trending_issues.json")
     if os.path.exists(issues_file):
-        with open(issues_file, "r") as f:
-            issues = json.load(f)
-        return jsonify(issues)
+        try:
+            with open(issues_file, "r") as f:
+                all_issues = json.load(f)
+            # Ensure all issues have _id, add if missing
+            for issue in all_issues:
+                if "_id" not in issue:
+                    issue["_id"] = str(uuid.uuid4())
+            # Load trending issues
+            trending_ids = []
+            if os.path.exists(trending_file):
+                try:
+                    with open(trending_file, "r") as f:
+                        content = f.read().strip()
+                        if content:
+                            trending_issues = json.loads(content)
+                            trending_ids = [issue["_id"] for issue in trending_issues]
+                except json.JSONDecodeError:
+                    pass
+            # Filter out trending issues from recent issues
+            recent_issues = [issue for issue in all_issues if issue["_id"] not in trending_ids]
+            # Sort by date (most recent first)
+            recent_issues.sort(key=lambda x: datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)
+            return jsonify(recent_issues)
+        except json.JSONDecodeError as e:
+            print(f"Error decoding issues.json: {str(e)}")
+            return jsonify({"error": "Invalid issues data"}), 500
     return jsonify([])
+
+@app.route("/trending", methods=["GET"])
+def get_trending_issues():
+    trending_file = os.path.join(TRENDS_FOLDER, "trending_issues.json")
+    if os.path.exists(trending_file):
+        try:
+            with open(trending_file, "r") as f:
+                content = f.read().strip()
+                if not content:
+                    print(f"Trending file is empty: {trending_file}")
+                    return jsonify([])  # Return empty list for empty file
+                trending_issues = json.loads(content)
+            print(f"Trending issues served: {trending_issues}")  # Debug log
+            return jsonify(trending_issues)
+        except json.JSONDecodeError as e:
+            print(f"Error decoding trending_issues.json: {str(e)} - Returning empty list")
+            return jsonify([])  # Return empty list on decode error
+    print(f"Trending file not found: {trending_file}")  # Debug log
+    return jsonify([])
+
+def update_trending_issues():
+    issues_file = os.path.join(ISSUES_FOLDER, "issues.json")
+    trending_file = os.path.join(TRENDS_FOLDER, "trending_issues.json")
+    if os.path.exists(issues_file):
+        try:
+            with open(issues_file, "r") as f:
+                issues = json.load(f)
+            print(f"Issues loaded for trending: {issues}")  # Debug log
+            # Sort issues by upvotes in descending order and take top 3
+            trending_issues = sorted(issues, key=lambda x: x.get("upvotes", 0), reverse=True)[:3]
+            print(f"Top 3 trending issues: {trending_issues}")  # Debug log
+            # Ensure the directory exists before writing
+            os.makedirs(os.path.dirname(trending_file), exist_ok=True)
+            with open(trending_file, "w") as f:
+                json.dump(trending_issues, f, indent=4)
+            print("Trending issues updated:", trending_issues)  # Debug log
+        except Exception as e:
+            print(f"Error updating trending issues: {str(e)}")  # Debug log
+    else:
+        print(f"Issues file not found: {issues_file}")  # Debug log
+
+def periodic_trending_update():
+    while True:
+        update_trending_issues()
+        time.sleep(5)  # Check every 5 seconds
+
+# Start the periodic update in a separate thread
+threading.Thread(target=periodic_trending_update, daemon=True).start()
 
 @app.errorhandler(Exception)
 def handle_error(error):

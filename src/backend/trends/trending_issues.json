@@ -1,0 +1,83 @@
+[
+    {
+        "_id": "4836942b-8e31-4eff-84fb-42b8a597d6b8",
+        "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+        "username": "WT",
+        "date": "19/04/2025",
+        "issue": "Waterlogging",
+        "location": "malad",
+        "description": "hanuman nagar",
+        "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745038391969.jpg",
+        "status": "Open",
+        "upvotes": 3,
+        "downvotes": 0,
+        "votes": [
+            {
+                "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+                "voteType": "up"
+            },
+            {
+                "userId": "ivxK1EyS5YgbsGs0S2mmYyZise52",
+                "voteType": "up"
+            },
+            {
+                "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
+                "voteType": "up"
+            }
+        ]
+    },
+    {
+        "_id": "5ad697c4-7795-443e-808b-18262b6037a0",
+        "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
+        "username": "JS",
+        "date": "19/04/2025",
+        "issue": "Pothole",
+        "location": "Kandiwali",
+        "description": "adarsh nagar",
+        "image": "http://localhost:3000/Uploads/JSDbIZ9TAJUEgk8SSoraGQaQYoJ3/1745038205597.jpg",
+        "status": "Open",
+        "upvotes": 2,
+        "downvotes": 1,
+        "votes": [
+            {
+                "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
+                "voteType": "up"
+            },
+            {
+                "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+                "voteType": "up"
+            },
+            {
+                "userId": "ivxK1EyS5YgbsGs0S2mmYyZise52",
+                "voteType": "down"
+            }
+        ]
+    },
+    {
+        "_id": "226581ee-2cd3-46d9-a876-8131a7b1a13e",
+        "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+        "username": "WT",
+        "date": "19/04/2025",
+        "issue": "Waterlogging",
+        "location": "malad",
+        "description": "tanaji nagar",
+        "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745038431541.jpg",
+        "status": "Open",
+        "upvotes": 2,
+        "downvotes": 1,
+        "votes": [
+            {
+                "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+                "voteType": "down"
+            },
+            {
+                "userId": "ivxK1EyS5YgbsGs0S2mmYyZise52",
+                "voteType": "up"
+            },
+            {
+                "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
+                "voteType": "up"
+            }
+        ]
+    }
+]

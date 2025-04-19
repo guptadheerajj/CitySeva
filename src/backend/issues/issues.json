@@ -63,7 +63,7 @@
         "description": "tanaji nagar",
         "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745038431541.jpg",
         "status": "Open",
-        "upvotes": 1,
+        "upvotes": 2,
         "downvotes": 1,
         "votes": [
             {
@@ -72,6 +72,10 @@
             },
             {
                 "userId": "ivxK1EyS5YgbsGs0S2mmYyZise52",
+                "voteType": "up"
+            },
+            {
+                "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
                 "voteType": "up"
             }
         ]
@@ -86,8 +90,32 @@
         "description": "near station",
         "image": "http://localhost:3000/Uploads/ivxK1EyS5YgbsGs0S2mmYyZise52/1745038517007.jpg",
         "status": "Open",
-        "upvotes": 0,
+        "upvotes": 1,
         "downvotes": 0,
-        "votes": []
+        "votes": [
+            {
+                "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
+                "voteType": "up"
+            }
+        ]
+    },
+    {
+        "_id": "7604a0f1-030b-4bc1-8d9b-6a8ab02db0ac",
+        "userId": "Igzd36AbAwc1JtBZKMGSpL0SBoz2",
+        "username": "IG",
+        "date": "19/04/2025",
+        "issue": "Waterlogging",
+        "location": "malwani",
+        "description": "hiiiii",
+        "image": "http://localhost:3000/Uploads/Igzd36AbAwc1JtBZKMGSpL0SBoz2/1745051456462.jpg",
+        "status": "Open",
+        "upvotes": 1,
+        "downvotes": 0,
+        "votes": [
+            {
+                "userId": "Igzd36AbAwc1JtBZKMGSpL0SBoz2",
+                "voteType": "up"
+            }
+        ]
     }
 ]
