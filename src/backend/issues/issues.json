@@ -90,11 +90,15 @@
         "description": "near station",
         "image": "http://localhost:3000/Uploads/ivxK1EyS5YgbsGs0S2mmYyZise52/1745038517007.jpg",
         "status": "Open",
-        "upvotes": 1,
+        "upvotes": 2,
         "downvotes": 0,
         "votes": [
             {
                 "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
                 "voteType": "up"
             }
         ]
@@ -109,11 +113,34 @@
         "description": "hiiiii",
         "image": "http://localhost:3000/Uploads/Igzd36AbAwc1JtBZKMGSpL0SBoz2/1745051456462.jpg",
         "status": "Open",
-        "upvotes": 1,
+        "upvotes": 2,
         "downvotes": 0,
         "votes": [
             {
                 "userId": "Igzd36AbAwc1JtBZKMGSpL0SBoz2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "up"
+            }
+        ]
+    },
+    {
+        "_id": "25aeeae5-f8b6-497f-b50d-0a319ffa49e2",
+        "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+        "username": "1P",
+        "date": "22/04/2025",
+        "issue": "Waterlogging",
+        "location": "Goregaon West, M.G. Road",
+        "description": "Foud this shit lying on the road",
+        "image": "http://localhost:3000/Uploads/1pRGWfCubJQaUmEZ2lCsiL6rvmg2/1745285070689.jpg",
+        "status": "Open",
+        "upvotes": 1,
+        "downvotes": 0,
+        "votes": [
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
                 "voteType": "up"
             }
         ]

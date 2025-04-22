@@ -200,6 +200,250 @@ nav,
 	text-align: center;
 }
 
+.about-container {
+	padding: 2rem clamp(1rem, 6.7941vw + -1.0297rem, 5rem);
+	max-width: 1200px;
+	margin: 0 auto;
+	color: var(--black-light);
+}
+
+.about-hero {
+	text-align: center;
+	padding: 2rem 0 3rem;
+}
+
+.about-hero h1 {
+	font-size: clamp(2rem, 1.5455rem + 1.4545vw, 3rem);
+	color: var(--black-dark);
+	margin-bottom: 1rem;
+}
+
+.about-hero p {
+	font-size: clamp(1rem, 0.8864rem + 0.3636vw, 1.25rem);
+	max-width: 700px;
+	margin: 0 auto;
+}
+
+.about-section {
+	margin: 4rem 0;
+}
+
+.about-section h2 {
+	font-size: clamp(1.5rem, 1.3182rem + 0.5818vw, 1.9rem);
+	color: var(--black-dark);
+	position: relative;
+	margin-bottom: 1.5rem;
+	text-align: center;
+}
+
+.about-section h2::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: -0.5rem;
+	width: 60px;
+	height: 4px;
+	background-color: rebeccapurple;
+	border-radius: 2px;
+}
+
+.mission-stats {
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	margin-top: 2.5rem;
+	gap: 2rem;
+}
+
+.stat-item {
+	text-align: center;
+	min-width: 150px;
+}
+
+.stat-item h3 {
+	font-size: 2.5rem;
+	color: rebeccapurple;
+}
+
+.story-content {
+	display: flex;
+	gap: 2rem;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+}
+
+.story-text {
+	flex: 1;
+	min-width: 300px;
+}
+
+.story-text p {
+	margin-bottom: 1rem;
+	line-height: 1.6;
+}
+
+.story-image {
+	flex: 1;
+	min-width: 300px;
+}
+
+.story-image img {
+	border-radius: 10px;
+	width: 100%;
+	height: auto;
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.values-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 2rem;
+	margin-top: 2rem;
+}
+
+.value-card {
+	background-color: white;
+	padding: 1.5rem;
+	border-radius: 10px;
+	width: 250px;
+	text-align: center;
+	box-shadow: rgba(100, 100, 111, 0.1) 0px 7px 29px 0px;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card:hover {
+	transform: translateY(-5px);
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.value-icon {
+	font-size: 2.5rem;
+	margin-bottom: 1rem;
+}
+
+.value-card h3 {
+	color: var(--black-dark);
+	margin-bottom: 0.5rem;
+}
+
+.team-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 2.5rem;
+	margin-top: 2.5rem;
+}
+
+.team-member {
+	width: 220px;
+	text-align: center;
+}
+
+.member-photo {
+	width: 150px;
+	height: 150px;
+	margin: 0 auto 1rem;
+	overflow: hidden;
+	border-radius: 50%;
+	border: 4px solid #f3fbfe;
+	box-shadow: rgba(100, 100, 111, 0.15) 0px 7px 29px 0px;
+}
+
+.member-photo img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.team-member h3 {
+	color: var(--black-dark);
+	margin-bottom: 0.25rem;
+}
+
+.member-role {
+	color: rebeccapurple;
+	font-weight: 500;
+	margin-bottom: 0.5rem;
+}
+
+.testimonials {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 2rem;
+	margin-top: 2.5rem;
+}
+
+.testimonial {
+	background-color: #f3fbfe;
+	padding: 1.5rem;
+	border-radius: 10px;
+	flex: 1;
+	min-width: 300px;
+	max-width: 500px;
+	position: relative;
+}
+
+.testimonial::before {
+	content: "";
+	font-size: 4rem;
+	position: absolute;
+	top: -1rem;
+	left: 1rem;
+	color: rgba(102, 51, 153, 0.2);
+}
+
+.testimonial-author {
+	font-style: italic;
+	text-align: right;
+	margin-top: 1rem;
+	color: var(--black-dark);
+}
+
+.join-section {
+	text-align: center;
+	padding: 3rem 1rem;
+	background-color: #f3fbfe;
+	border-radius: 10px;
+	margin-bottom: 3rem;
+}
+
+.join-section p {
+	max-width: 600px;
+	margin: 0 auto 2rem;
+}
+
+.about-cta-btn {
+	background-color: rebeccapurple;
+	padding: 0.8rem 2.5rem;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.about-cta-btn:hover {
+	background-color: #5a3680;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+	.mission-stats {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.story-content {
+		flex-direction: column;
+	}
+
+	.story-image {
+		order: -1;
+	}
+}
+
 /* register */
 
 .formTab {
@@ -276,7 +520,7 @@ input {
 }
 
 label,
-.social-login {
+social-login {
 	display: flex;
 	flex-flow: row nowrap;
 }

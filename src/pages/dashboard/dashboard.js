@@ -58,9 +58,8 @@ export const dashboard = (function () {
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-autofill">Detect Issue With AI</button>
-            <button class="btn btn-submit">Submit Issue</button>
+          <div class="modal-footer" id="modal-footer">
+            <button class="btn btn-autofill" id="detect-btn">Detect Issue With AI</button>
           </div>
         </div>
       </div>
@@ -90,62 +89,9 @@ export const dashboard = (function () {
 
   function renderRightSidebar() {
     return `
-      <div class="announcements">
-        <h2>Important Updates</h2>
-        <div class="announcement-item">
-          <span class="priority-tag priority-high">High Priority</span>
-          <h3>Emergency Road Repairs</h3>
-          <p>Major repairs scheduled on Main Street bridge. Please use alternate routes.</p>
-          <div class="date">Mar 20, 2024</div>
-        </div>
-        <div class="announcement-item">
-          <span class="priority-tag priority-medium">Community Event</span>
-          <h3>City Clean-up Drive</h3>
-          <p>Join us this weekend for the annual city clean-up initiative. Volunteers needed!</p>
-          <div class="date">Mar 23, 2024</div>
-        </div>
-        <div class="announcement-item">
-          <span class="priority-tag priority-low">Notice</span>
-          <h3>Water Conservation</h3>
-          <p>Tips and guidelines for reducing water usage during the summer months.</p>
-          <div class="date">Mar 25, 2024</div>
-        </div>
-      </div>
       <div class="trending">
         <h2>Trending Issues</h2>
-        <div class="trending-item">
-          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=123" alt="User avatar">
-          <div class="trending-item-info">
-            <h4>Traffic Signal Malfunction</h4>
-            <p>5th & Park Avenue</p>
-            <div class="stats">
-              <span class="stats-item"><i class="fas fa-star"></i> 45</span>
-              <span class="stats-item"><i class="fas fa-eye"></i> 128</span>
-            </div>
-          </div>
-        </div>
-        <div class="trending-item">
-          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=456" alt="User avatar">
-          <div class="trending-item-info">
-            <h4>Park Renovation Project</h4>
-            <p>Central Park</p>
-            <div class="stats">
-              <span class="stats-item"><i class="fas fa-star"></i> 38</span>
-              <span class="stats-item"><i class="fas fa-eye"></i> 95</span>
-            </div>
-          </div>
-        </div>
-        <div class="trending-item">
-          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=789" alt="User avatar">
-          <div class="trending-item-info">
-            <h4>Street Light Installation</h4>
-            <p>Riverside Drive</p>
-            <div class="stats">
-              <span class="stats-item"><i class="fas fa-star"></i> 32</span>
-              <span class="stats-item"><i class="fas fa-eye"></i> 87</span>
-            </div>
-          </div>
-        </div>
+        <div id="trending-container"></div>
       </div>
     `;
   }
@@ -223,6 +169,32 @@ export const dashboard = (function () {
     `;
   }
 
+  function renderTrendingCard(issue) {
+    const [day, month, year] = issue.date.split('/');
+    const date = `${month}/${day}/${year}`; // Convert to MM/DD/YYYY
+    return `
+      <div class="trending-item">
+        <div class="trending-item-content-wrapper">
+          <div class="trending-item-header">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${issue.userId}" alt="User avatar" class="trending-user-avatar">
+            <div class="trending-item-header-info">
+              <p class="username">@${issue.username}</p>
+              <p class="date">${date}</p>
+            </div>
+          </div>
+          <div class="trending-item-status">
+            <h3>${issue.issue}</h3>
+            <p>${issue.location}</p>
+            <p>${issue.description || "No description"}</p>
+          </div>
+        </div>
+        <div class="trending-item-image-container">
+          <img src="${issue.image}" alt="${issue.issue}" class="trending-item-image">
+        </div>
+      </div>
+    `;
+  }
+
   function renderMainContent() {
     return `
       <div class="content-grid">
@@ -235,6 +207,16 @@ export const dashboard = (function () {
         </div>
       </div>
     `;
+  }
+
+  async function fetchTrendingIssues() {
+    try {
+      const response = await fetch("http://localhost:3000/trending");
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching trending issues:", error);
+      return [];
+    }
   }
 
   function render(user) {
@@ -271,11 +253,29 @@ export const dashboard = (function () {
     const locationInput = content.querySelector("#issue-location");
     const descriptionInput = content.querySelector("#issue-description");
     const issuesContainer = content.querySelector("#issues-container");
+    const trendingContainer = content.querySelector("#trending-container");
+    const modalFooter = content.querySelector("#modal-footer");
+    let detectBtn = content.querySelector("#detect-btn");
+
+    // Populate trending issues dynamically
+    async function updateTrending() {
+      const trendingIssues = await fetchTrendingIssues();
+      if (trendingIssues.length > 0) {
+        trendingContainer.innerHTML = trendingIssues.map(issue => renderTrendingCard(issue)).join("");
+      } else {
+        trendingContainer.innerHTML = "<p>No trending issues yet.</p>";
+      }
+    }
+    updateTrending(); // Initial load
+    setInterval(updateTrending, 5000); // Poll every 5 seconds
 
     uploadBtn.addEventListener("click", () => {
       modal.classList.add("active");
       detectionResult.innerHTML = "";
       commentSection.style.display = "none";
+      modalFooter.innerHTML = `<button class="btn btn-autofill" id="detect-btn">Detect Issue With AI</button>`;
+      detectBtn = content.querySelector("#detect-btn"); // Reassign after re-rendering
+      setupDetectButton();
     });
 
     closeBtn.addEventListener("click", () => {
@@ -284,6 +284,9 @@ export const dashboard = (function () {
       commentSection.style.display = "none";
       locationInput.value = "";
       descriptionInput.value = "";
+      modalFooter.innerHTML = `<button class="btn btn-autofill" id="detect-btn">Detect Issue With AI</button>`;
+      detectBtn = content.querySelector("#detect-btn"); // Reassign after re-rendering
+      setupDetectButton();
     });
 
     modal.addEventListener("click", (e) => {
@@ -293,6 +296,9 @@ export const dashboard = (function () {
         commentSection.style.display = "none";
         locationInput.value = "";
         descriptionInput.value = "";
+        modalFooter.innerHTML = `<button class="btn btn-autofill" id="detect-btn">Detect Issue With AI</button>`;
+        detectBtn = content.querySelector("#detect-btn"); // Reassign after re-rendering
+        setupDetectButton();
       }
     });
 
@@ -315,15 +321,76 @@ export const dashboard = (function () {
       }
     });
 
-    const autofillBtn = content.querySelector(".btn-autofill");
-    const submitBtn = content.querySelector(".btn-submit");
+    function setupDetectButton() {
+      if (detectBtn) {
+        detectBtn.removeEventListener("click", handleDetect); // Remove old listener to avoid duplicates
+        detectBtn.addEventListener("click", handleDetect);
+      }
+    }
 
-    function debounce(func, wait) {
-      let timeout;
-      return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-      };
+    function handleDetect() {
+      console.log("Detect button clicked");
+      const file = imageInput.files[0];
+      if (!file) {
+        alert("Please upload an image first!");
+        return;
+      }
+      if (!user || !user.uid) {
+        alert("User not authenticated. Please log in again.");
+        return;
+      }
+      detectIssue(file);
+    }
+
+    async function detectIssue(file) {
+      try {
+        const formData = new FormData();
+        formData.append("userId", user.uid);
+        formData.append("image", file);
+        console.log("Sending FormData:", { file: file.name, userId: user.uid });
+
+        detectionResult.innerHTML = "<p>Detecting issue...</p>";
+        commentSection.style.display = "none";
+        const uploadResponse = await fetch("http://localhost:3000/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        console.log("Upload response status:", uploadResponse.status);
+        const uploadResult = await uploadResponse.json();
+        console.log("Upload response body:", uploadResult);
+
+        if (!uploadResponse.ok) {
+          throw new Error(uploadResult.error || "Failed to upload image");
+        }
+
+        uploadedImagePath = uploadResult.file_path;
+
+        const detectResponse = await fetch("http://localhost:3000/detect", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ file_path: uploadResult.file_path }),
+        });
+
+        console.log("Detect response status:", detectResponse.status);
+        const detectResult = await detectResponse.json();
+        console.log("Detect response body:", detectResult);
+
+        if (!detectResponse.ok) {
+          throw new Error(detectResult.error || "Failed to detect issue");
+        }
+
+        detectionResult.innerHTML = `<p style="color: green;">Issue detected: ${detectResult.issue}</p>`;
+        commentSection.style.display = "block";
+        modalFooter.innerHTML = `
+          <button class="btn btn-submit" id="submit-btn">Submit Issue</button>
+        `;
+        setupSubmitButton();
+      } catch (error) {
+        console.error("Error during detection:", error.message);
+        detectionResult.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+        commentSection.style.display = "none";
+      }
     }
 
     let uploadedImagePath = "";
@@ -332,7 +399,11 @@ export const dashboard = (function () {
       try {
         const response = await fetch("http://localhost:3000/issues");
         const issues = await response.json();
-        issues.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        issues.sort((a, b) => {
+          const dateA = new Date(a.date.split('/').reverse().join('-'));
+          const dateB = new Date(b.date.split('/').reverse().join('-'));
+          return dateB - dateA;
+        });
         issuesContainer.innerHTML = issues.map(issue => renderIssueCard(issue)).join("");
         
         const voteButtons = content.querySelectorAll(".vote-btn");
@@ -345,7 +416,7 @@ export const dashboard = (function () {
               return;
             }
             await updateVote(issueId, voteType, user.uid);
-            fetchIssues(); // Refresh issues after voting
+            fetchIssues();
           });
         });
       } catch (error) {
@@ -353,72 +424,15 @@ export const dashboard = (function () {
       }
     }
 
-    autofillBtn.addEventListener(
-      "click",
-      debounce(async () => {
-        console.log("autofillBtn clicked");
-        const file = imageInput.files[0];
-        if (!file) {
-          alert("Please upload an image first!");
-          return;
-        }
-        if (!user || !user.uid) {
-          alert("User not authenticated. Please log in again.");
-          return;
-        }
-        try {
-          const formData = new FormData();
-          formData.append("userId", user.uid);
-          formData.append("image", file);
-          console.log("Sending FormData:", { file: file.name, userId: user.uid });
+    function setupSubmitButton() {
+      const submitBtn = content.querySelector("#submit-btn");
+      if (submitBtn) {
+        submitBtn.removeEventListener("click", handleSubmit); // Remove old listener to avoid duplicates
+        submitBtn.addEventListener("click", handleSubmit);
+      }
+    }
 
-          for (let [key, value] of formData.entries()) {
-            console.log(`FormData entry: ${key}=${value instanceof File ? value.name : value}`);
-          }
-
-          detectionResult.innerHTML = "<p>Detecting issue...</p>";
-          commentSection.style.display = "none";
-          const uploadResponse = await fetch("http://localhost:3000/upload", {
-            method: "POST",
-            body: formData,
-          });
-
-          console.log("Upload response status:", uploadResponse.status);
-          const uploadResult = await uploadResponse.json();
-          console.log("Upload response body:", uploadResult);
-
-          if (!uploadResponse.ok) {
-            throw new Error(uploadResult.error || "Failed to upload image");
-          }
-
-          console.log("Image uploaded successfully:", uploadResult);
-          uploadedImagePath = uploadResult.file_path;
-
-          const detectResponse = await fetch("http://localhost:3000/detect", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ file_path: uploadResult.file_path }),
-          });
-
-          console.log("Detect response status:", detectResponse.status);
-          const detectResult = await detectResponse.json();
-          console.log("Detect response body:", detectResult);
-
-          if (!detectResponse.ok) {
-            throw new Error(detectResult.error || "Failed to detect issue");
-          }
-
-          detectionResult.innerHTML = `<p style="color: green;">Issue detected: ${detectResult.issue}</p>`;
-          commentSection.style.display = "block";
-        } catch (error) {
-          console.error("Error:", error.message);
-          detectionResult.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-          commentSection.style.display = "none";
-        }
-      }, 500)
-    );
-
-    submitBtn.addEventListener("click", () => {
+    function handleSubmit() {
       const location = locationInput.value.trim();
       const description = descriptionInput.value.trim();
       if (!location) {
@@ -457,14 +471,17 @@ export const dashboard = (function () {
           commentSection.style.display = "none";
           locationInput.value = "";
           descriptionInput.value = "";
-          fetchIssues(); // Refresh issues after submission
+          modalFooter.innerHTML = `<button class="btn btn-autofill" id="detect-btn">Detect Issue With AI</button>`;
+          detectBtn = content.querySelector("#detect-btn");
+          setupDetectButton();
+          fetchIssues();
         }
       })
       .catch(error => {
         console.error("Error submitting issue:", error);
         alert("Failed to submit issue!");
       });
-    });
+    }
 
     async function updateVote(issueId, voteType, userId) {
       try {
@@ -495,6 +512,7 @@ export const dashboard = (function () {
       }
     });
 
+    setupDetectButton();
     fetchIssues();
   }
 
