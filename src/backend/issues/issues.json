@@ -9,8 +9,8 @@
         "description": "adarsh nagar",
         "image": "http://localhost:3000/Uploads/JSDbIZ9TAJUEgk8SSoraGQaQYoJ3/1745038205597.jpg",
         "status": "Open",
-        "upvotes": 2,
-        "downvotes": 1,
+        "upvotes": 3,
+        "downvotes": 2,
         "votes": [
             {
                 "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
@@ -22,6 +22,14 @@
             },
             {
                 "userId": "ivxK1EyS5YgbsGs0S2mmYyZise52",
+                "voteType": "down"
+            },
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
                 "voteType": "down"
             }
         ]
@@ -36,8 +44,8 @@
         "description": "hanuman nagar",
         "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745038391969.jpg",
         "status": "Open",
-        "upvotes": 3,
-        "downvotes": 0,
+        "upvotes": 4,
+        "downvotes": 1,
         "votes": [
             {
                 "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
@@ -50,6 +58,14 @@
             {
                 "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
                 "voteType": "up"
+            },
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "down"
             }
         ]
     },
@@ -63,8 +79,8 @@
         "description": "tanaji nagar",
         "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745038431541.jpg",
         "status": "Open",
-        "upvotes": 2,
-        "downvotes": 1,
+        "upvotes": 3,
+        "downvotes": 2,
         "votes": [
             {
                 "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
@@ -77,6 +93,14 @@
             {
                 "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
                 "voteType": "up"
+            },
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "down"
             }
         ]
     },
@@ -90,7 +114,7 @@
         "description": "near station",
         "image": "http://localhost:3000/Uploads/ivxK1EyS5YgbsGs0S2mmYyZise52/1745038517007.jpg",
         "status": "Open",
-        "upvotes": 2,
+        "upvotes": 3,
         "downvotes": 0,
         "votes": [
             {
@@ -99,6 +123,10 @@
             },
             {
                 "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "up"
+            },
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
                 "voteType": "up"
             }
         ]
@@ -137,7 +165,7 @@
         "image": "http://localhost:3000/Uploads/1pRGWfCubJQaUmEZ2lCsiL6rvmg2/1745285070689.jpg",
         "status": "Open",
         "upvotes": 2,
-        "downvotes": 0,
+        "downvotes": 1,
         "votes": [
             {
                 "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
@@ -146,6 +174,10 @@
             {
                 "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
                 "voteType": "up"
+            },
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "down"
             }
         ]
     },
@@ -160,8 +192,13 @@
         "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745570113764.jpg",
         "status": "Open",
         "upvotes": 0,
-        "downvotes": 0,
-        "votes": []
+        "downvotes": 1,
+        "votes": [
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "down"
+            }
+        ]
     },
     {
         "_id": "8129b46e-3997-48f8-a68f-ae616826bc91",
@@ -193,8 +230,13 @@
         "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745570948024.jpg",
         "status": "Open",
         "upvotes": 0,
-        "downvotes": 0,
-        "votes": []
+        "downvotes": 1,
+        "votes": [
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "down"
+            }
+        ]
     },
     {
         "_id": "91b1f6ef-039f-4404-a882-273056a9d733",
@@ -208,8 +250,13 @@
         "image": "http://localhost:3000/Uploads/pxhvBODZujhIFwWf0PpeUjakM513/1745571520968.jpeg",
         "status": "Open",
         "upvotes": 0,
-        "downvotes": 0,
-        "votes": []
+        "downvotes": 1,
+        "votes": [
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "down"
+            }
+        ]
     },
     {
         "_id": "4f3ab5a3-f689-42f7-9a39-a8ff5e72c2dd",
@@ -222,8 +269,65 @@
         "description": "L management",
         "image": "http://localhost:3000/Uploads/1pRGWfCubJQaUmEZ2lCsiL6rvmg2/1745641396047.jpg",
         "status": "Open",
-        "upvotes": 0,
+        "upvotes": 2,
         "downvotes": 0,
-        "votes": []
+        "votes": [
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "up"
+            }
+        ]
+    },
+    {
+        "_id": "4ea3da22-bed5-466b-93d1-b018332edf26",
+        "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+        "username": "WT",
+        "date": "26/04/2025",
+        "timestamp": "2025-04-26 10:22:09",
+        "issue": "Waterlogging",
+        "location": "Hanuman Nagar kurar Village Malad East",
+        "description": "pani nikal do",
+        "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745643082423.jpg",
+        "status": "Open",
+        "upvotes": 2,
+        "downvotes": 0,
+        "votes": [
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "up"
+            }
+        ]
+    },
+    {
+        "_id": "019e09a2-57de-4321-924d-fa4ca168cfd6",
+        "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+        "username": "9K",
+        "date": "26/04/2025",
+        "timestamp": "2025-04-26 10:43:26",
+        "issue": "Waterlogging",
+        "location": "Adarsh Nagar Khet Vadee Malad East",
+        "description": "machaooooooo",
+        "image": "http://localhost:3000/Uploads/9kpYSFCWMITUV16Ak8MJCaiPDjI2/1745644349366.jpg",
+        "status": "Open",
+        "upvotes": 1,
+        "downvotes": 1,
+        "votes": [
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "down"
+            }
+        ]
     }
 ]

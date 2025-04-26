@@ -9,8 +9,8 @@
         "description": "hanuman nagar",
         "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745038391969.jpg",
         "status": "Open",
-        "upvotes": 3,
-        "downvotes": 0,
+        "upvotes": 4,
+        "downvotes": 1,
         "votes": [
             {
                 "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
@@ -23,6 +23,14 @@
             {
                 "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
                 "voteType": "up"
+            },
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "down"
             }
         ]
     },
@@ -36,8 +44,8 @@
         "description": "adarsh nagar",
         "image": "http://localhost:3000/Uploads/JSDbIZ9TAJUEgk8SSoraGQaQYoJ3/1745038205597.jpg",
         "status": "Open",
-        "upvotes": 2,
-        "downvotes": 1,
+        "upvotes": 3,
+        "downvotes": 2,
         "votes": [
             {
                 "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
@@ -49,6 +57,14 @@
             },
             {
                 "userId": "ivxK1EyS5YgbsGs0S2mmYyZise52",
+                "voteType": "down"
+            },
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
                 "voteType": "down"
             }
         ]
@@ -63,8 +79,8 @@
         "description": "tanaji nagar",
         "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745038431541.jpg",
         "status": "Open",
-        "upvotes": 2,
-        "downvotes": 1,
+        "upvotes": 3,
+        "downvotes": 2,
         "votes": [
             {
                 "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
@@ -77,6 +93,14 @@
             {
                 "userId": "JSDbIZ9TAJUEgk8SSoraGQaQYoJ3",
                 "voteType": "up"
+            },
+            {
+                "userId": "9kpYSFCWMITUV16Ak8MJCaiPDjI2",
+                "voteType": "up"
+            },
+            {
+                "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+                "voteType": "down"
             }
         ]
     }

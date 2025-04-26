@@ -15,6 +15,7 @@ export const dashboard = (function () {
 
     let currentTab = "home";
     let currentTheme = localStorage.getItem("theme") || "dark";
+    let user = null; // Store the user object to access in fetchIssues and updateTrending
 
     function initializeTheme() {
         document.body.classList.toggle("light-theme", currentTheme === "light");
@@ -62,6 +63,15 @@ export const dashboard = (function () {
             <button class="btn btn-autofill" id="detect-btn">Detect Issue With AI</button>
           </div>
         </div>
+      </div>
+    `;
+    }
+
+    function renderMaximizeImageModal() {
+        return `
+      <div class="maximize-image-modal" id="maximize-image-modal">
+        <button class="close-maximize-btn">×</button>
+        <img id="maximized-image" src="" alt="Maximized Issue Image">
       </div>
     `;
     }
@@ -143,7 +153,7 @@ export const dashboard = (function () {
         <div class="issue-card-image-container">
           <img src="${issue.image}" alt="${
               issue.issue
-          }" class="issue-card-image">
+          }" class="issue-card-image" data-full-image="${issue.image}">
         </div>
         <div class="issue-card-content-wrapper">
           <div>
@@ -188,18 +198,19 @@ export const dashboard = (function () {
     function renderTrendingCard(issue) {
         const [day, month, year] = issue.date.split("/");
         const date = `${month}/${day}/${year}`;
+        const issueId = issue._id || "unknown";
+        const userVote = issue.votes.find(
+            (v) => v.userId === auth.currentUser?.uid
+        )?.voteType;
+
         return `
-      <div class="trending-item">
+      <div class="trending-item" data-id="${issueId}">
         <div class="trending-item-image-container">
-          <img src="${issue.image}" alt="${
-              issue.issue
-          }" class="trending-item-image">
+          <img src="${issue.image}" alt="${issue.issue}" class="trending-item-image" data-full-image="${issue.image}">
         </div>
         <div class="trending-item-content-wrapper">
           <div class="trending-item-header">
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${
-                issue.userId
-            }" alt="User avatar" class="trending-user-avatar">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${issue.userId}" alt="User avatar" class="trending-user-avatar">
             <div class="trending-item-header-info">
               <p class="username">@${issue.username}</p>
               <p class="date">${date}</p>
@@ -210,14 +221,18 @@ export const dashboard = (function () {
             <p>${issue.location}</p>
             <p>${issue.description || "No description"}</p>
             <div class="vote-section">
-              <span class="vote-display upvote">
-                <img src="${beforeUpvoteIcon}" alt="Upvote" class="vote-icon">
+              <button class="vote-btn upvote" data-type="up">
+                <img src="${
+                    userVote === "up" ? afterUpvoteIcon : beforeUpvoteIcon
+                }" alt="Upvote" class="vote-icon">
                 <span>${issue.upvotes || 0}</span>
-              </span>
-              <span class="vote-display downvote">
-                <img src="${beforeDownvoteIcon}" alt="Downvote" class="vote-icon">
+              </button>
+              <button class="vote-btn downvote" data-type="down">
+                <img src="${
+                    userVote === "down" ? afterDownvoteIcon : beforeDownvoteIcon
+                }" alt="Downvote" class="vote-icon">
                 <span>${issue.downvotes || 0}</span>
-              </span>
+              </button>
             </div>
           </div>
         </div>
@@ -275,14 +290,29 @@ export const dashboard = (function () {
                     .join("");
             }
 
-            const voteButtons = content.querySelectorAll(".vote-btn");
+            // Attach event listeners to vote buttons within .issue-card
+            const voteButtons = content.querySelectorAll(".issue-card .vote-btn");
+            if (voteButtons.length === 0) {
+                console.warn("No vote buttons found in issue cards.");
+                return;
+            }
             voteButtons.forEach((button) => {
                 button.addEventListener("click", async () => {
-                    const issueId = button.closest(".issue-card").dataset.id;
+                    const issueCard = button.closest(".issue-card");
+                    if (!issueCard) {
+                        console.error("Vote button not within an issue card:", button);
+                        return;
+                    }
+                    const issueId = issueCard.dataset.id;
                     const voteType = button.dataset.type;
                     if (!issueId || issueId === "unknown") {
                         console.error("Invalid issueId:", issueId);
                         alert("Cannot vote on this issue due to an invalid ID.");
+                        return;
+                    }
+                    if (!user || !user.uid) {
+                        console.error("User not authenticated for voting.");
+                        alert("Please log in to vote.");
                         return;
                     }
                     await updateVote(issueId, voteType, user.uid);
@@ -296,7 +326,27 @@ export const dashboard = (function () {
         }
     }
 
-    function render(user) {
+    async function updateVote(issueId, voteType, userId) {
+        try {
+            console.log("Sending vote:", { issueId, voteType, userId });
+            const response = await fetch("http://localhost:3000/vote", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ issueId, voteType, userId }),
+            });
+            if (!response.ok) {
+                throw new Error("Vote update failed");
+            }
+            const result = await response.json();
+            console.log("Vote update response:", result);
+        } catch (error) {
+            console.error("Error updating vote:", error.message);
+            alert("Failed to update vote: " + error.message);
+        }
+    }
+
+    function render(currentUser) {
+        user = currentUser; // Store user for use in fetchIssues and updateTrending
         content.innerHTML = `
       ${renderSidebar()}
       <div class="main-content">
@@ -304,6 +354,7 @@ export const dashboard = (function () {
         ${renderMainContent()}
       </div>
       ${renderUploadModal()}
+      ${renderMaximizeImageModal()}
     `;
 
         initializeTheme();
@@ -332,6 +383,9 @@ export const dashboard = (function () {
         const issuesContainer = content.querySelector("#issues-container");
         const trendingContainer = content.querySelector("#trending-container");
         const modalFooter = content.querySelector("#modal-footer");
+        const maximizeImageModal = content.querySelector("#maximize-image-modal");
+        const maximizeImage = content.querySelector("#maximized-image");
+        const closeMaximizeBtn = content.querySelector(".close-maximize-btn");
         let detectBtn = content.querySelector("#detect-btn");
 
         async function updateTrending() {
@@ -343,15 +397,96 @@ export const dashboard = (function () {
             } else {
                 trendingContainer.innerHTML = "<p>No trending issues yet.</p>";
             }
+
+            // Attach event listeners to vote buttons within .trending-item
+            const voteButtons = content.querySelectorAll(".trending-item .vote-btn");
+            if (voteButtons.length === 0) {
+                console.warn("No vote buttons found in trending items.");
+            } else {
+                voteButtons.forEach((button) => {
+                    button.addEventListener("click", async () => {
+                        const trendingItem = button.closest(".trending-item");
+                        if (!trendingItem) {
+                            console.error("Vote button not within a trending item:", button);
+                            return;
+                        }
+                        const issueId = trendingItem.dataset.id;
+                        const voteType = button.dataset.type;
+                        if (!issueId || issueId === "unknown") {
+                            console.error("Invalid issueId:", issueId);
+                            alert("Cannot vote on this issue due to an invalid ID.");
+                            return;
+                        }
+                        if (!user || !user.uid) {
+                            console.error("User not authenticated for voting.");
+                            alert("Please log in to vote.");
+                            return;
+                        }
+                        await updateVote(issueId, voteType, user.uid);
+                        updateTrending();
+                        fetchIssues();
+                    });
+                });
+            }
+
+            // Attach event listeners to images in trending items
+            const trendingImages = content.querySelectorAll(".trending-item-image");
+            console.log("Found trending images:", trendingImages.length);
+            if (trendingImages.length === 0) {
+                console.warn("No trending images found to attach event listeners.");
+            }
+            trendingImages.forEach((image) => {
+                console.log("Attaching event listener to trending image:", image.src);
+                image.addEventListener("click", () => {
+                    console.log("Trending image clicked:", image.dataset.fullImage);
+                    maximizeImage.src = image.dataset.fullImage;
+                    maximizeImageModal.classList.add("active");
+                });
+            });
         }
         updateTrending();
         setInterval(updateTrending, 60000);
 
         async function updateRecentIssues() {
             await fetchIssues();
+
+            // Attach event listeners to images in issue cards with a slight delay
+            setTimeout(() => {
+                const issueImages = content.querySelectorAll(".issue-card-image");
+                console.log("Found issue images (delayed):", issueImages.length);
+                if (issueImages.length === 0) {
+                    console.warn("No issue images found to attach event listeners (delayed).");
+                }
+                issueImages.forEach((image) => {
+                    // Remove existing event listeners to prevent duplicates
+                    image.removeEventListener("click", handleIssueImageClick);
+                    image.addEventListener("click", handleIssueImageClick);
+                });
+            }, 100);
         }
+
+        function handleIssueImageClick(event) {
+            const image = event.target;
+            console.log("Issue image clicked:", image.dataset.fullImage);
+            maximizeImage.src = image.dataset.fullImage;
+            maximizeImageModal.classList.add("active");
+        }
+
         updateRecentIssues();
         setInterval(updateRecentIssues, 60000);
+
+        // Close the maximize image modal
+        closeMaximizeBtn.addEventListener("click", () => {
+            maximizeImageModal.classList.remove("active");
+            maximizeImage.src = "";
+        });
+
+        maximizeImageModal.addEventListener("click", (e) => {
+            if (e.target === maximizeImageModal) {
+                maximizeImageModal.classList.remove("active");
+                maximizeImage.src = "";
+            }
+        });
 
         uploadBtn.addEventListener("click", () => {
             modal.classList.add("active");
@@ -536,6 +671,7 @@ export const dashboard = (function () {
                         detectBtn = content.querySelector("#detect-btn");
                         setupDetectButton();
                         fetchIssues();
+                        updateTrending();
                         alert("Issue submitted successfully!");
                     }
                 })
@@ -543,25 +679,6 @@ export const dashboard = (function () {
                     console.error("Error submitting issue:", error.message);
                     alert("Failed to submit issue: " + error.message);
                 });
-        }
-
-        async function updateVote(issueId, voteType, userId) {
-            try {
-                console.log("Sending vote:", { issueId, voteType, userId });
-                const response = await fetch("http://localhost:3000/vote", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ issueId, voteType, userId }),
-                });
-                if (!response.ok) {
-                    throw new Error("Vote update failed");
-                }
-                const result = await response.json();
-                console.log("Vote update response:", result);
-            } catch (error) {
-                console.error("Error updating vote:", error.message);
-                alert("Failed to update vote: " + error.message);
-            }
         }
 
         const logoutBtn = content.querySelector("#logout-btn");
@@ -580,16 +697,16 @@ export const dashboard = (function () {
         fetchIssues();
     }
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
+    onAuthStateChanged(auth, (currentUser) => {
+        if (currentUser) {
             console.log("Dashboard - User Details:", {
-                email: user.email,
-                uid: user.uid,
-                displayName: user.displayName,
-                emailVerified: user.emailVerified,
-                lastSignInTime: user.metadata.lastSignInTime,
+                email: currentUser.email,
+                uid: currentUser.uid,
+                displayName: currentUser.displayName,
+                emailVerified: currentUser.emailVerified,
+                lastSignInTime: currentUser.metadata.lastSignInTime,
             });
-            render(user);
+            render(currentUser);
         } else {
             window.location.href = "/#/login";
         }
