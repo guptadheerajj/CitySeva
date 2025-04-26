@@ -30,6 +30,54 @@
 	--border-color: var(--dark-border-color);
 	--hover-color: var(--dark-hover-color);
 }
+/* Modal for maximized image */
+.maximize-image-modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	z-index: 1000;
+	justify-content: center;
+	align-items: center;
+}
+
+.maximize-image-modal.active {
+	display: flex;
+}
+
+.maximize-image-modal img {
+	max-width: 90%;
+	max-height: 90%;
+	object-fit: contain;
+	border-radius: 8px;
+	animation: maximizeImage 0.3s ease-in-out;
+}
+
+.maximize-image-modal .close-maximize-btn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background: none;
+	border: none;
+	color: white;
+	font-size: 30px;
+	cursor: pointer;
+}
+
+/* Animation for maximizing the image */
+@keyframes maximizeImage {
+	from {
+		transform: scale(0.5);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
 
 /* Existing styles remain unchanged; add the following */
 .detection-result {
@@ -107,6 +155,7 @@
 	background: none;
 	border: none;
 	cursor: pointer;
+	color: var(--text-primary);
 }
 
 .vote-icon {
@@ -789,6 +838,7 @@
 	border-radius: 16px;
 	padding: 20px;
 	border: 1px solid var(--border-color);
+	align-self: start;
 }
 
 .announcements,
