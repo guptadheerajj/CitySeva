@@ -136,13 +136,94 @@
         "description": "Foud this shit lying on the road",
         "image": "http://localhost:3000/Uploads/1pRGWfCubJQaUmEZ2lCsiL6rvmg2/1745285070689.jpg",
         "status": "Open",
-        "upvotes": 1,
+        "upvotes": 2,
         "downvotes": 0,
         "votes": [
             {
                 "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
                 "voteType": "up"
+            },
+            {
+                "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+                "voteType": "up"
             }
         ]
+    },
+    {
+        "_id": "b85b0ddd-a81f-4e9f-b1ea-04645257e977",
+        "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+        "username": "WT",
+        "date": "25/04/2025",
+        "issue": "Streetlight Issue",
+        "location": "ram mandir",
+        "description": "hhhihhihii",
+        "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745570113764.jpg",
+        "status": "Open",
+        "upvotes": 0,
+        "downvotes": 0,
+        "votes": []
+    },
+    {
+        "_id": "8129b46e-3997-48f8-a68f-ae616826bc91",
+        "userId": "OYJqWDvFISQYkMiaH6AKefCveSO2",
+        "username": "OY",
+        "date": "25/04/2025",
+        "issue": "Pothole",
+        "location": "hanuman nagar",
+        "description": "hello guys",
+        "image": "http://localhost:3000/Uploads/OYJqWDvFISQYkMiaH6AKefCveSO2/1745570480167.jpg",
+        "status": "Open",
+        "upvotes": 1,
+        "downvotes": 0,
+        "votes": [
+            {
+                "userId": "OYJqWDvFISQYkMiaH6AKefCveSO2",
+                "voteType": "up"
+            }
+        ]
+    },
+    {
+        "_id": "9216ff40-92f0-4d30-877c-83ba3b9e5d1e",
+        "userId": "wtXoEr0PMyaJJ26zdhhk39NXvot2",
+        "username": "WT",
+        "date": "25/04/2025",
+        "issue": "Waterlogging",
+        "location": "hi",
+        "description": "hi",
+        "image": "http://localhost:3000/Uploads/wtXoEr0PMyaJJ26zdhhk39NXvot2/1745570948024.jpg",
+        "status": "Open",
+        "upvotes": 0,
+        "downvotes": 0,
+        "votes": []
+    },
+    {
+        "_id": "91b1f6ef-039f-4404-a882-273056a9d733",
+        "userId": "pxhvBODZujhIFwWf0PpeUjakM513",
+        "username": "PX",
+        "date": "25/04/2025",
+        "timestamp": "2025-04-25 14:29:12",
+        "issue": "Waterlogging",
+        "location": "whankhade",
+        "description": "hi",
+        "image": "http://localhost:3000/Uploads/pxhvBODZujhIFwWf0PpeUjakM513/1745571520968.jpeg",
+        "status": "Open",
+        "upvotes": 0,
+        "downvotes": 0,
+        "votes": []
+    },
+    {
+        "_id": "4f3ab5a3-f689-42f7-9a39-a8ff5e72c2dd",
+        "userId": "1pRGWfCubJQaUmEZ2lCsiL6rvmg2",
+        "username": "1P",
+        "date": "26/04/2025",
+        "timestamp": "2025-04-26 09:54:18",
+        "issue": "Waterlogging",
+        "location": "Prem Nagar, near Inorbit mall, Malad West, Mumbai",
+        "description": "L management",
+        "image": "http://localhost:3000/Uploads/1pRGWfCubJQaUmEZ2lCsiL6rvmg2/1745641396047.jpg",
+        "status": "Open",
+        "upvotes": 0,
+        "downvotes": 0,
+        "votes": []
     }
 ]
