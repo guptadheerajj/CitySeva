@@ -13,5 +13,20 @@
         "upvotes": 0,
         "downvotes": 0,
         "votes": []
+    },
+    {
+        "_id": "24daea53-d2ee-4c16-adcb-e0bc7772b7a8",
+        "userId": "GWlDnHotRnerg7GSVfFTldVrphO2",
+        "username": "GW",
+        "date": "03/05/2025",
+        "timestamp": "2025-05-03 10:30:13",
+        "issue": "Waterlogging",
+        "location": "Idharich",
+        "description": "Email aya kya bsdk",
+        "image": "http://localhost:3000/Uploads/GWlDnHotRnerg7GSVfFTldVrphO2/1746248396973.jpg",
+        "status": "Open",
+        "upvotes": 0,
+        "downvotes": 0,
+        "votes": []
     }
 ]

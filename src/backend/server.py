@@ -48,6 +48,7 @@ except Exception as e:
 # Email queue for asynchronous sending
 email_queue = queue.Queue()
 SENDER_EMAIL = "testg14225@gmail.com"
+# Make sure to use a valid app password from your Google account security settings
 APP_PASSWORD = "zctk pccd yhvk scmw"
 
 # Serve static files from Uploads directory
@@ -383,26 +384,44 @@ def send_email_notification(to_email, subject, body, image_path):
         msg['From'] = SENDER_EMAIL
         msg['To'] = to_email
         msg.attach(MIMEText(body, 'plain'))
+        
         if image_path and os.path.exists(image_path):
             with open(image_path, 'rb') as img_file:
                 img = MIMEImage(img_file.read(), name=os.path.basename(image_path))
                 msg.attach(img)
             print(f"Attached image: {image_path}")
         else:
-            print("No valid image path provided or file not found")
-        start_time = time.time()
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            print("Connecting to SMTP server in notification...")
+            print(f"Image not found at path: {image_path}")
+        
+        # Add detailed debugging
+        print(f"Starting email send process to {to_email}")
+        print(f"SMTP Server: smtp.gmail.com")
+        print(f"Sender: {SENDER_EMAIL}")
+        
+        with smtplib.SMTP('smtp.gmail.com', 587, timeout=30) as server:
+            print("Connected to SMTP server")
             server.starttls()
-            print("Starting TLS in notification...")
-            print("Logging in in notification...")
+            print("TLS started")
+            print("Attempting login...")
             server.login(SENDER_EMAIL, APP_PASSWORD)
-            print("Sending message in notification...")
+            print("Login successful")
+            print("Sending message...")
             server.send_message(msg)
-        print(f"Email sending took {time.time() - start_time:.2f} seconds")
-        print(f"Email sent successfully to {to_email} in notification")
+            print("Message sent")
+        
+        print(f"Email successfully sent to {to_email}")
+        return True
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"SMTP Authentication Error: {str(e)}")
+        print("Most likely your Gmail app password is invalid or expired.")
+        print("Go to https://myaccount.google.com/apppasswords to generate a new app password")
+        return False
+    except smtplib.SMTPException as e:
+        print(f"SMTP Error: {str(e)}")
+        return False
     except Exception as e:
-        print(f"Failed to send email in notification: {str(e)}")
+        print(f"Unexpected error sending email: {str(e)}")
+        return False
 
 threading.Thread(target=email_sending_thread, daemon=True).start()
 threading.Thread(target=periodic_trending_update, daemon=True).start()
