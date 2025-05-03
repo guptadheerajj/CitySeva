@@ -1,0 +1,17 @@
+[
+    {
+        "_id": "2a2b9836-c9f1-487a-b61f-103f9da61ff0",
+        "userId": "GWlDnHotRnerg7GSVfFTldVrphO2",
+        "username": "GW",
+        "date": "03/05/2025",
+        "timestamp": "2025-05-03 10:17:01",
+        "issue": "Pothole",
+        "location": "Laxmi Nagar",
+        "description": "Nitin bsdk",
+        "image": "http://localhost:3000/Uploads/GWlDnHotRnerg7GSVfFTldVrphO2/1746247585468.jpeg",
+        "status": "Open",
+        "upvotes": 0,
+        "downvotes": 0,
+        "votes": []
+    }
+]

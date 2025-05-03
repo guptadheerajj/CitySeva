@@ -25,7 +25,7 @@ ISSUES_FOLDER = os.path.abspath("issues")
 TRENDS_FOLDER = os.path.abspath("trends")
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
-MODEL_PATH = "image_classifier_model_resaved.h5"
+MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "image_classifier_model_resaved.h5")
 BASE_URL = "http://localhost:3000"
 
 # Ensure upload, issues, and trends folders exist
@@ -36,8 +36,12 @@ os.makedirs(TRENDS_FOLDER, exist_ok=True)
 # Load TensorFlow model at startup
 model = None
 try:
-    model = tf.keras.models.load_model(MODEL_PATH, safe_mode=False, compile=False)
-    print("Model loaded successfully")
+    print(f"Attempting to load model from: {MODEL_PATH}")
+    if os.path.exists(MODEL_PATH):
+        model = tf.keras.models.load_model(MODEL_PATH, safe_mode=False, compile=False)
+        print("Model loaded successfully")
+    else:
+        print(f"Error: Model file not found at {MODEL_PATH}")
 except Exception as e:
     print(f"Error loading model at startup: {str(e)}")
 
@@ -249,7 +253,6 @@ def update_vote():
 @cross_origin()
 def get_issues():
     issues_file = os.path.join(ISSUES_FOLDER, "issues.json")
-    trending_file = os.path.join(TRENDS_FOLDER, "trending_issues.json")
     if os.path.exists(issues_file):
         try:
             with open(issues_file, "r") as f:
@@ -257,23 +260,12 @@ def get_issues():
             for issue in all_issues:
                 if "_id" not in issue:
                     issue["_id"] = str(uuid.uuid4())
-            trending_ids = []
-            if os.path.exists(trending_file):
-                try:
-                    with open(trending_file, "r") as f:
-                        content = f.read().strip()
-                        if content:
-                            trending_issues = json.loads(content)
-                            trending_ids = [issue["_id"] for issue in trending_issues]
-                except json.JSONDecodeError:
-                    pass
-            recent_issues = [issue for issue in all_issues if issue["_id"] not in trending_ids]
             # Sort by timestamp if available, otherwise fall back to date
-            recent_issues.sort(key=lambda x: datetime.strptime(
+            all_issues.sort(key=lambda x: datetime.strptime(
                 x.get("timestamp", "/".join(x["date"].split("/")[::-1])),  # Convert DD/MM/YYYY to YYYY/MM/DD
                 "%Y-%m-%d %H:%M:%S" if "timestamp" in x else "%Y/%m/%d"
             ), reverse=True)
-            return jsonify(recent_issues)
+            return jsonify(all_issues)
         except json.JSONDecodeError as e:
             print(f"Error decoding issues.json: {str(e)}")
             return jsonify({"error": "Invalid issues data"}), 500
