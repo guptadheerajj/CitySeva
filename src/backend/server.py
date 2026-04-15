@@ -47,9 +47,12 @@ except Exception as e:
 
 # Email queue for asynchronous sending
 email_queue = queue.Queue()
-SENDER_EMAIL = "testg14225@gmail.com"
-# Make sure to use a valid app password from your Google account security settings
-APP_PASSWORD = "zctk pccd yhvk scmw"
+# Load email credentials from environment variables
+from dotenv import load_dotenv
+load_dotenv()
+SENDER_EMAIL = os.environ.get("EMAIL_SENDER", "")
+# Get app password from environment variables
+APP_PASSWORD = os.environ.get("EMAIL_APP_PASSWORD", "")
 
 # Serve static files from Uploads directory
 @app.route("/Uploads/<path:filename>")

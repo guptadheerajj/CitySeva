@@ -2,14 +2,16 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 
+// Environment variables are loaded by webpack
+
 const firebaseConfig = {
-	apiKey: "AIzaSyC-8nlxP2LylRRapHtPMdvt11c2HcodEdc",
-	authDomain: "authentication-e33e6.firebaseapp.com",
-	projectId: "authentication-e33e6",
-	storageBucket: "authentication-e33e6.firebasestorage.app",
-	messagingSenderId: "1063507672025",
-	appId: "1:1063507672025:web:b8487953744dbac91537c8",
-	measurementId: "G-ZKVR5MQ9GY",
+	apiKey: process.env.FIREBASE_API_KEY,
+	authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+	projectId: process.env.FIREBASE_PROJECT_ID,
+	storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+	messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+	appId: process.env.FIREBASE_APP_ID,
+	measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
